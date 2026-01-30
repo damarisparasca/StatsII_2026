@@ -1,0 +1,44 @@
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c(),  pkgTest)
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+set.seed(123)#
+# generate data #
+data <- (rcauchy(1000, location = 0, scale = 1))
+data
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)
+D <- max(abs(empiricalCDF - pnorm(data)))#
+D
+install.packages("dgof")#
+library("dgof")
+ks.test(data, "pnorm")
+d = rnorm(1000)#
+ks.test(data, d)
+d = pnorm(1000)#
+ks.test(data, d)
+d = pnorm(data)#
+ks.test(data, d)
+ks.test(data, "pnorm")
+set.seed(123)#
+# generate data #
+data <- (rcauchy(1000, location = 0, scale = 1))#
+# create empirical distribution of observed data#
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)#
+# generate test statistic#
+D <- max(abs(empiricalCDF - pnorm(data)))#
+D

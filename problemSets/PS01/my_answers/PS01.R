@@ -37,11 +37,22 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 #####################
 
 set.seed(123)
+# generate data 
+data <- (rcauchy(1000, location = 0, scale = 1))
 # create empirical distribution of observed data
 ECDF <- ecdf(data)
 empiricalCDF <- ECDF(data)
 # generate test statistic
 D <- max(abs(empiricalCDF - pnorm(data)))
+D 
+# generate p-value 
+
+
+install.packages("dgof")
+library("dgof")
+
+# Perform the K-S test to check if the sample follows a normal distribution
+ks.test(data, "pnorm")
 
 #####################
 # Problem 2
