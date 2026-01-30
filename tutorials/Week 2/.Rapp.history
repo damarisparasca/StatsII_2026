@@ -1,0 +1,435 @@
+lapply(c("tidyverse", "ggplot2", "readxl"), pkgTest)
+data_raw <- read_excel("dataset.xslx")
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c("tidyverse", "ggplot2", "readxl"), pkgTest)
+data <- read_excel("dataset.xslx")
+data <- read_excel("dataset.xlsx")
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+lapply(c("tidyverse", "ggplot2", "readxl"), pkgTest)
+data <- read_excel("dataset.xlsx")
+data <- read_excel("dataset.xslx")
+data <- read_excel("dataset.xslx")
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+rm(list=ls())
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c("tidyverse", "ggplot2", "readxl"), pkgTest)
+data <- read_excel("dataset.xslx")
+data_raw <- read_excel('dataset.xslx')
+data_raw <- read_excel('dataset.xslx')
+data_raw <- read_excel('dataset.xslx')
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+if (rstudioapi::isAvailable()) {#
+  setwd(dirname(rstudioapi::getActiveDocumentContext()$path))#
+}#
+#
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+data_raw <- read_excel('Desktop/StatsII_2026/tutorials/Week 2/dataset.xslx')
+ata_raw <- read_excel('Desktop/StatsII_2026/tutorials/Week 2/'dataset.xslx')
+data_raw <- read_excel('Desktop/StatsII_2026/tutorials/Week 2/'dataset.xslx')
+data_raw <- read_excel("Desktop/StatsII_2026/tutorials/Week 2/dataset.xslx")
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+data_raw <- read_excel("Desktop/StatsII_2026/tutorials/Week 2/dataset.xslx")
+lapply(c("tidyverse", "ggplot2", "readxl"), pkgTest)
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c("tidyverse", "ggplot2", "readxl"), pkgTest)
+data_raw <- read_excel("Desktop/StatsII_2026/tutorials/Week 2/dataset.xslx")
+data_raw <- read_excel("/Users/damirish/Desktop/StatsII_2026/tutorials/Week 2/dataset.numbers")
+data_raw <- read_excel('/Users/damirish/Desktop/StatsII_2026/tutorials/Week 2/dataset.numbers')
+data_raw <- read_excel('/Users/damirish/Desktop/StatsII_2026/tutorials/Week 2/dataset.xslx')
+data_raw <- read_excel('/Users/damirish/Desktop/StatsII_2026/tutorials/Week 2/dataset.xlsx')
+str(data_raw)
+rm(list=ls())#
+#
+# Detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}#
+#
+# Load any necessary packages#
+lapply(c("tidyverse", "ggplot2", "readxl"),  pkgTest)
+data_raw <- read_excel('/Users/damirish/Desktop/StatsII_2026/tutorials/Week 2/dataset.xlsx')
+str(data_raw)
+names(data_raw)
+data <- data_raw %>%#
+  select(#
+    codewdi,#
+    country,#
+    year,#
+    `time to regular turnover`,#
+    `regular turnover dummy`,#
+    `irregular turnover dummy`,#
+    `legal duration`#
+  ) %>%#
+  mutate(#
+    codewdi = as.factor(codewdi),#
+    country = as.factor(country),#
+    year = as.integer(year),#
+    time_to_regular_turnover = as.integer(`time to regular turnover`),#
+    regular_turnover = as.integer(`regular turnover dummy`),#
+    irregular_turnover = as.integer(`irregular turnover dummy`),#
+    legal_duration = as.integer(`legal duration`)#
+  ) %>%#
+  drop_na()
+data <- data %>%#
+  select(#
+    codewdi,#
+    country,#
+    year,#
+    time_to_regular_turnover,#
+    regular_turnover,#
+    irregular_turnover,#
+    legal_duration#
+  )
+str(data)
+unique(data$year)
+unique(data$time_to_regular_turnover)#
+unique(data$regular_turnover)#
+unique(data$irregular_turnover)#
+unique(data$legal_duration)
+bad_codes <- c(-999, -666, -555, -881)
+data <- data %>%#
+  mutate(#
+    across(#
+      c(year, time_to_regular_turnover, regular_turnover, irregular_turnover, legal_duration#
+      ),#
+      ~ replace(., . %in% bad_codes, NA)#
+    )#
+  )
+lapply(#
+  data[c("year",#
+         "time_to_regular_turnover",#
+         "regular_turnover",#
+         "irregular_turnover",#
+         "legal_duration")],#
+  unique#
+)#
+#
+data <- data %>% drop_na()
+country_turnover <- data %>%#
+  group_by(country) %>%#
+  summarize(#
+    avg_turnover = mean(irregular_turnover),#
+    n = n()#
+  )
+country_turnover %>%#
+  arrange(desc(avg_turnover)) %>%#
+  slice(1:5)
+country_turnover %>%#
+  arrange(avg_turnover) %>%#
+  slice(1:5)
+ggplot(country_turnover, aes(x = avg_turnover)) +#
+  geom_histogram(bins = 30, fill = "steelblue", alpha = 0.7) +#
+  labs(#
+    x = "Average Irregular Turnover Rate",#
+    y = "Number of Countries",#
+    title = "Distribution of Country-Level Irregular Turnover Rates"#
+  )
+lpm <- lm(#
+  irregular_turnover ~ time_to_regular_turnover + legal_duration,#
+  data = data#
+)
+summary(lpm)
+typical <- data.frame(#
+  time_to_regular_turnover = median(data$time_to_regular_turnover, na.rm = TRUE),#
+  legal_duration = median(data$legal_duration, na.rm = TRUE)#
+)
+predict(lpm, newdata = typical)
+data$lpm_pred <- predict(lpm)#
+#
+data %>%#
+  filter(lpm_pred < 0 | lpm_pred > 1) %>%#
+  select(country, year, lpm_pred) %>%#
+  head()
+grid <- data.frame(#
+  time_to_regular_turnover = seq(#
+    min(data$time_to_regular_turnover, na.rm = TRUE),#
+    max(data$time_to_regular_turnover, na.rm = TRUE),#
+    length.out = 100#
+  ),#
+  legal_duration = median(data$legal_duration, na.rm = TRUE)#
+)
+grid$lpm_fit <- predict(lpm, newdata = grid)
+library(ggplot2)#
+#
+ggplot(grid, aes(x = time_to_regular_turnover, y = lpm_fit)) +#
+  geom_line(color = "blue", linewidth = 1) +#
+  labs(#
+    x = "Time to Regular Turnover",#
+    y = "Predicted Probability of Irregular Turnover",#
+    title = "LPM Predicted Probability"#
+  )
+logit <- glm(#
+  irregular_turnover ~ time_to_regular_turnover + legal_duration,#
+  data = data,#
+  family = binomial#
+)
+summary(logit)
+predict(logit, newdata = typical, type = "response")
+predict(logit, newdata = typical, type = "response")
+grid <- data.frame(#
+  time_to_regular_turnover = seq(#
+    min(data$time_to_regular_turnover, na.rm = TRUE),#
+    max(data$time_to_regular_turnover, na.rm = TRUE),#
+    length.out = 100#
+  ),#
+  legal_duration = median(data$legal_duration, na.rm = TRUE)#
+)#
+#
+grid$lpm_fit <- predict(lpm, newdata = grid)
+grid$logit_fit <- predict(logit, newdata = grid, type = "response")
+ggplot(grid, aes(x = time_to_regular_turnover)) +#
+  geom_line(aes(y = lpm_fit, color = "LPM"), linewidth = 1) +#
+  geom_line(aes(y = logit_fit, color = "Logit"), linewidth = 1) +#
+  scale_color_manual(values = c("LPM" = "blue", "Logit" = "red")) +#
+  labs(#
+    x = "Time to Regular Turnover",#
+    y = "Predicted Probability of Irregular Turnover",#
+    color = "Model",#
+    title = "LPM vs Logit Predictions"#
+  )
+ggplot(grid, aes(x = time_to_regular_turnover)) +#
+  geom_line(aes(y = lpm_fit, color = "LPM"), linewidth = 1) +#
+  geom_line(aes(y = logit_fit, color = "Logit"), linewidth = 1) +#
+  scale_color_manual(values = c("LPM" = "blue", "Logit" = "red")) +#
+  labs(#
+    x = "Time to Regular Turnover",#
+    y = "Predicted Probability of Irregular Turnover",#
+    color = "Model",#
+    title = "LPM vs Logit Predictions"#
+  )
+country_turnover <- data %>%#
+  group_by(country) %>%#
+  summarize(#
+    avg_turnover = mean(irregular_turnover),#
+    n = n()#
+  )
+rm(list=ls())#
+#
+# Detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}#
+#
+# Load any necessary packages#
+lapply(c("tidyverse", "ggplot2", "readxl"),  pkgTest)
+data_raw <- read_excel('/Users/damirish/Desktop/StatsII_2026/tutorials/Week 2/dataset.xlsx')#
+str(data_raw)  #
+names(data_raw)
+data <- data_raw %>%#
+  select(#
+    codewdi,#
+    country,#
+    year,#
+    `time to regular turnover`,#
+    `regular turnover dummy`,#
+    `irregular turnover dummy`,#
+    `legal duration`#
+  ) %>%#
+  mutate(#
+    codewdi = as.factor(codewdi),#
+    country = as.factor(country),#
+    year = as.integer(year),#
+    time_to_regular_turnover = as.integer(`time to regular turnover`),#
+    regular_turnover = as.integer(`regular turnover dummy`),#
+    irregular_turnover = as.integer(`irregular turnover dummy`),#
+    legal_duration = as.integer(`legal duration`)#
+  ) %>%#
+  drop_na()
+data <- data %>%#
+  select(#
+    codewdi,#
+    country,#
+    year,#
+    time_to_regular_turnover,#
+    regular_turnover,#
+    irregular_turnover,#
+    legal_duration#
+  )
+str(data)#
+#
+unique(data$year) #
+unique(data$time_to_regular_turnover)#
+unique(data$regular_turnover)#
+unique(data$irregular_turnover)#
+unique(data$legal_duration)
+bad_codes <- c(-999, -666, -555, -881)#
+#
+data <- data %>%#
+  mutate(#
+    across(#
+      c(year, time_to_regular_turnover, regular_turnover, irregular_turnover, legal_duration#
+      ),#
+      ~ replace(., . %in% bad_codes, NA)#
+    )#
+  )#
+#
+lapply(#
+  data[c("year",#
+         "time_to_regular_turnover",#
+         "regular_turnover",#
+         "irregular_turnover",#
+         "legal_duration")],#
+  unique#
+)#
+#
+data <- data %>% drop_na()
+country_turnover <- data %>%#
+  group_by(country) %>%#
+  summarize(#
+    avg_turnover = mean(irregular_turnover),#
+    n = n()#
+  )
+country_turnover %>%#
+  arrange(desc(avg_turnover)) %>%#
+  slice(1:5)
+view(country_turnover)
+View(country_turnover)
+country_turnover %>%#
+  arrange(desc(avg_turnover)) %>%#
+  slice(1:5)
+country_turnover
+country_turnover %>%#
+  arrange(avg_turnover) %>%#
+  slice(1:5)
+country_turnover %>%#
+  arrange(desc(avg_turnover)) %>%#
+  slice(1:5)
+ggplot(country_turnover, aes(x = avg_turnover)) +#
+  geom_histogram(bins = 30, fill = "steelblue", alpha = 0.7) +#
+  labs(#
+    x = "Average Irregular Turnover Rate",#
+    y = "Number of Countries",#
+    title = "Distribution of Country-Level Irregular Turnover Rates"#
+  )
+lpm <- lm(#
+  irregular_turnover ~ time_to_regular_turnover + legal_duration,#
+  data = data#
+)#
+#
+summary(lpm)
+typical <- data.frame(#
+  time_to_regular_turnover = median(data$time_to_regular_turnover, na.rm = TRUE),#
+  legal_duration = median(data$legal_duration, na.rm = TRUE)#
+)
+predict(lpm, newdata = typical)
+data$lpm_pred <- predict(lpm)
+data %>%#
+  filter(lpm_pred < 0 | lpm_pred > 1) %>%#
+  select(country, year, lpm_pred) %>%#
+  head()
+grid <- data.frame(#
+  time_to_regular_turnover = seq(#
+    min(data$time_to_regular_turnover, na.rm = TRUE),#
+    max(data$time_to_regular_turnover, na.rm = TRUE),#
+    length.out = 100#
+  ),#
+  legal_duration = median(data$legal_duration, na.rm = TRUE)#
+)
+grid$lpm_fit <- predict(lpm, newdata = grid)
+library(ggplot2)
+ggplot(grid, aes(x = time_to_regular_turnover, y = lpm_fit)) +#
+  geom_line(color = "blue", linewidth = 1) +#
+  labs(#
+    x = "Time to Regular Turnover",#
+    y = "Predicted Probability of Irregular Turnover",#
+    title = "LPM Predicted Probability"#
+  )
+logit <- glm(#
+  irregular_turnover ~ time_to_regular_turnover + legal_duration,#
+  data = data,#
+  family = binomial#
+)#
+#
+summary(logit)
+predict(logit, newdata = typical, type = "response")
+grid <- data.frame(#
+  time_to_regular_turnover = seq(#
+    min(data$time_to_regular_turnover, na.rm = TRUE),#
+    max(data$time_to_regular_turnover, na.rm = TRUE),#
+    length.out = 100#
+  ),#
+  legal_duration = median(data$legal_duration, na.rm = TRUE)#
+)#
+#
+grid$lpm_fit <- predict(lpm, newdata = grid)
+grid$logit_fit <- predict(logit, newdata = grid, type = "response")
+ggplot(grid, aes(x = time_to_regular_turnover)) +#
+  geom_line(aes(y = lpm_fit, color = "LPM"), linewidth = 1) +#
+  geom_line(aes(y = logit_fit, color = "Logit"), linewidth = 1) +#
+  scale_color_manual(values = c("LPM" = "blue", "Logit" = "red")) +#
+  labs(#
+    x = "Time to Regular Turnover",#
+    y = "Predicted Probability of Irregular Turnover",#
+    color = "Model",#
+    title = "LPM vs Logit Predictions"#
+  )
