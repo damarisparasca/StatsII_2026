@@ -42,3 +42,627 @@ empiricalCDF <- ECDF(data)#
 # generate test statistic#
 D <- max(abs(empiricalCDF - pnorm(data)))#
 D
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}#
+#
+# here is where you load any necessary packages#
+# ex: stringr#
+# lapply(c("stringr"),  pkgTest)#
+#
+lapply(c(),  pkgTest)
+set.seed(123)#
+# generate data #
+data <- (rcauchy(1000, location = 0, scale = 1))#
+# create empirical distribution of observed data#
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)#
+# generate test statistic#
+D <- max(abs(empiricalCDF - pnorm(data)))
+D
+install.packages("dgof")#
+library("dgof")
+ks.test(data, "pnorm")#
+ks.test(data, "pnorm")$statistic#
+ks.test(data, "pnorm")$p.value
+exp(1)
+ks_pvalue <- function(D, tol = 1e-8, stop_k = 1000) {#
+	k <- 1#
+	result <- Inf#
+	sum <- 0 #
+#
+while (term > tol && k < stop_k) {#
+	result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+	s <- s + result#
+	k <- k + 1#
+	}#
+	p_value <- sqrt(2*pi)/D * sum #
+	return p_value #
+}
+ks_pvalue <- function(D, tol = 1e-8, stop_k = 1000) {#
+	k <- 1#
+	result <- Inf#
+	sum <- 0 #
+#
+while (result > tol && k < stop_k) {#
+	result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+	s <- s + result#
+	k <- k + 1#
+	}#
+	p_value <- sqrt(2*pi)/D * sum #
+	return p_value #
+}
+ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
+	k <- 1#
+	result <- Inf#
+	sum <- 0 #
+#
+while (result > tol && k < stop_k) {#
+	result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+	s <- s + result#
+	k <- k + 1#
+	}#
+	p_value <- sqrt(2*pi)/d * sum #
+	return p_value #
+}
+p <- ks_value(D)
+p <- ks_pvalue(D)
+ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
+	k <- 1#
+	result <- Inf#
+	sum <- 0 #
+#
+	while (result > tol && k < stop_k) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+		k <- k + 1#
+	}#
+	p_value <- sqrt(2*pi)/d * sum #
+	return p_value #
+}
+ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
+	k <- 1#
+	result <- Inf#
+	sum <- 0 #
+#
+	while (result > tol && k < stop_k) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		sum <- sum + result#
+		k <- k + 1#
+	}#
+	p_value <- sqrt(2*pi)/d * sum #
+	return p_value #
+}
+p <- ks_pvalue(D)
+ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
+	k <- 1#
+	result <- Inf#
+	sum <- 0 #
+#
+	while (result > tol && k < stop_k) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		sum <- sum + result#
+		k <- k + 1#
+	}#
+	p_value <- sqrt(2*pi)/d * sum #
+	return p_value #
+}
+ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
+	k <- 1#
+	result <- Inf#
+	s <- 0 #
+#
+	while (result > tol && k < stop_k) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+		k <- k + 1#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	return p_value #
+}
+ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
+	k <- 1#
+	result <- Inf#
+	s <- 0 #
+#
+	while (result > tol && k < stop_k) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+		k <- k + 1#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+p <- ks_pvalue(D)
+p
+ks.test(data, "pnorm")#
+ks.test(data, "pnorm")$statistic#
+ks.test(data, "pnorm")$p.value
+pv <- 1 - p#
+pv
+p <- ks_pvalue(D)
+pv <- 1 - p
+pv
+p <- ks_pvalue(D)#
+p
+data <- (rcauchy(1000, location = 0, scale = 1))#
+# create empirical distribution of observed data#
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)#
+# generate test statistic#
+D <- max(abs(empiricalCDF - pnorm(data)))#
+D
+ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
+	k <- 1#
+	result <- Inf#
+	s <- 0 #
+#
+	while (result > tol && k < stop_k) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+		k <- k + 1#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+p <- ks_pvalue(D)#
+p
+ks.test(data, "pnorm")#
+ks.test(data, "pnorm")$statistic#
+ks.test(data, "pnorm")$p.value
+ks.test(data, "pnorm")
+ks.test(data, "pnorm")$p.value
+ks_test <- ks.test(data, "pnorm", mean = mean(data), sd = sd(data))#
+ks_test$statistic#
+ks_test$p.value
+ks_test <- ks.test(data, "pnorm", mean = mean(data), sd = sd(data))
+ks_test <- ks.test(data, "pnorm", mean = mean(data), sd = sd(data))#
+ks_test
+ks_test <- ks.test(data, "pnorm")#
+ks_test
+D <- max(abs(empiricalCDF - pnorm(data)))#
+D
+ks_pvalue <- function(d, tol = 1e-8, stop_k = 100000) {#
+	k <- 1#
+	result <- Inf#
+	s <- 0 #
+#
+	while (result > tol && k < stop_k) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+		k <- k + 1#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+p <- ks_pvalue(D)
+p
+ks_test <- ks.test(data, "pnorm")#
+ks_test$p.value
+ks_test <- ks.test(data, "pnorm")#
+options(digits = 22)   # show more digits#
+ks_test$p.value
+ks_test <- ks.test(data, "pnorm")#
+options(digits = 30)   # show more digits#
+ks_test$p.value
+ks_test <- ks.test(data, "pnorm")#
+options(digits = 22)   # show more digits#
+ks_test$p.value
+ks_pvalue <- function(d, tol = 1e-20, stop_k = 100000) {#
+	k <- 1#
+	result <- Inf#
+	s <- 0 #
+#
+	while (result > tol && k < stop_k) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+		k <- k + 1#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+p <- ks_pvalue(D)#
+p
+ks_pvalue <- function(d, tol = 1e-8, stop_k = 100000) {#
+	k <- 1#
+	result <- Inf#
+	s <- 0 #
+#
+	while (result > tol && k < stop_k) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+		k <- k + 1#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+p <- ks_pvalue(D)#
+p
+set.seed(123)#
+# generate data #
+data <- (rcauchy(1000, location = 0, scale = 1))#
+# create empirical distribution of observed data#
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)#
+# generate test statistic#
+D <- max(abs(empiricalCDF - pnorm(data)))#
+D
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c(),  pkgTest)
+set.seed(123)#
+# generate data #
+data <- (rcauchy(1000, location = 0, scale = 1))#
+# create empirical distribution of observed data#
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)#
+# generate test statistic#
+D <- max(abs(empiricalCDF - pnorm(data)))#
+D
+ks_test <- ks.test(data, "pnorm")
+ks_test <- ks.test(data, "pnorm")#
+ks_test
+set.seed(123)#
+# generate data #
+data <- (rcauchy(1000, location = 0, scale = 1))#
+# create empirical distribution of observed data#
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)#
+# generate test statistic#
+D <- max(abs(empiricalCDF - pnorm(data)))#
+D
+set.seed(123)
+data <- (rcauchy(1000, location = 0, scale = 1))
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)
+D <- max(abs(empiricalCDF - pnorm(data)))
+D
+ks_pvalue <- function(d, tol = 1e-8, stop_k = 100000) {#
+	k <- 1#
+	result <- Inf#
+	s <- 0 #
+#
+	while (result > tol && k < stop_k) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+		k <- k + 1#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+p <- ks_pvalue(D)#
+p
+ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
+	k <- 1#
+	result <- Inf#
+	s <- 0 #
+#
+	while (result > tol && k < stop_k) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+		k <- k + 1#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+p <- ks_pvalue(D)#
+p
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c(),  pkgTest)
+set.seed(123)#
+# generate data #
+data <- (rcauchy(1000, location = 0, scale = 1))#
+# create empirical distribution of observed data#
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)#
+# generate test statistic#
+D <- max(abs(empiricalCDF - pnorm(data)))#
+D
+data <- (rcauchy(1000, location = 0, scale = 1))#
+# create empirical distribution of observed data#
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)#
+# generate test statistic#
+D <- max(abs(empiricalCDF - pnorm(data)))#
+D
+set.seed(123)#
+# generate data #
+data <- (rcauchy(1000, location = 0, scale = 1))#
+# create empirical distribution of observed data#
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)#
+# generate test statistic#
+D <- max(abs(empiricalCDF - pnorm(data)))#
+D
+ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
+	k <- 1#
+	result <- Inf#
+	s <- 0 #
+#
+	while (result > tol && k < stop_k) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+		k <- k + 1#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+p <- ks_pvalue(D)#
+p
+ks_test <- ks.test(data, "pnorm")#
+ks_test#
+ks_test$p.value
+set.seed(123)#
+ks_test <- ks.test(data, "pnorm")#
+ks_test#
+ks_test$p.value
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c(),  pkgTest)
+set.seed(123)
+data <- (rcauchy(1000, location = 0, scale = 1))#
+# create empirical distribution of observed data#
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)#
+# generate test statistic#
+D <- max(abs(empiricalCDF - pnorm(data)))#
+D
+set.seed(123)#
+# generate data #
+data <- (rcauchy(1000, location = 0, scale = 1))#
+# create empirical distribution of observed data#
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)#
+# generate test statistic#
+D <- max(abs(empiricalCDF - pnorm(data)))#
+D
+ks_pvalue <- function(data = data, d) {#
+	s <- 0#
+	for k in length(data) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+ks_pvalue <- function(data = data, d = D) {#
+	s <- 0#
+	for k in length(data) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
+	k <- 1#
+	result <- Inf#
+	s <- 0 #
+#
+	while (result > tol && k < stop_k) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+		k <- k + 1#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+p <- ks_pvalue(d = D)#
+p
+ks_pvalue <- function(data = data, d = D) {#
+	s <- 0#
+	for (k in 1:length(data)) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+p <- ks_pval()#
+p
+ks_pval <- function(data = data, d = D) {#
+	s <- 0#
+	for (k in 1:length(data)) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+p <- ks_pval()#
+p
+ks_pval <- function(data = data, d = D) {#
+	s <- 0#
+	for (k in 1:length(data)) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+p <- ks_pval()#
+p
+ks_pval <- function(data, d) {#
+	s <- 0#
+	for (k in 1:length(data)) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+p <- ks_pval(data, D)#
+p
+set.seed(123)#
+# generate data #
+data <- (rcauchy(1000, location = 0, scale = 1))#
+# create empirical distribution of observed data#
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)#
+# generate test statistic#
+D <- max(abs(empiricalCDF - pnorm(data)))#
+D
+ks_pval <- function(data, d) {#
+	s <- 0#
+	for (k in 1:length(data)) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+p <- ks_pval(data, D)#
+p
+set.seed (123)#
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+lm(y ~ x, data = data)
+set.seed (123)#
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+lm_model <- lm(y ~ x, data = data)#
+lm_model
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c(),  pkgTest)
+set.seed (123)#
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)#
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)#
+	k <- ncol(X)#
+	beta <- theta[1:k]#
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta#
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) #
+	/ (2*sigma2))#
+	return (-logl)
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)#
+	k <- ncol(X)#
+	beta <- theta[1:k]#
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta#
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl)#
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+linear.MLE
+print(linear.MLE$par)
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)#
+	k <- ncol(X)#
+	beta <- theta[1:k]#
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta#
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl)#
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+print(linear.MLE$par)
+linear.MLE
+set.seed (123)#
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)#
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)#
+	k <- ncol(X)#
+	beta <- theta[1:k]#
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta#
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl)#
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE
+linear.MLE$par
+set.seed (123)#
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)#
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)
+set.seed (123)#
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)#
+plot(data$x, data$y, ylab = "Y", xlab = "X")
