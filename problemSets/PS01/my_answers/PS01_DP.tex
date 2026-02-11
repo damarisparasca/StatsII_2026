@@ -2,7 +2,7 @@
 \usepackage{graphicx,textcomp}
 \usepackage{natbib}
 \usepackage{setspace}
-\usepackage{fullpage}
+\usepackage[margin=1in]{geometry}
 \usepackage{color}
 \usepackage[reqno]{amsmath}
 \usepackage{amsthm}
@@ -98,12 +98,50 @@ $$p(D \leq d)= \frac{\sqrt {2\pi}}{d} \sum _{k=1}^{\infty }e^{-(2k-1)^{2}\pi ^{2
 	empiricalCDF <- ECDF(data)
 	# generate test statistic
 	D <- max(abs(empiricalCDF - pnorm(data))) \end{lstlisting}
+\newpage
+\section*{Solution - Problem 1} 
+\vspace{.5cm}
+\noindent The function below translates the formula for the p-value calculated from the Kolmogorov–Smirnov CDF into R code. Since each term in the final sum decreases as its index k increases (because the terms are of the form e to a negative power and e is greater than 1), raising them to increasingly negative powers causes the terms to converge to 0. To ensure that the function has a stopping point (and does not run infinitely), I set a \text{max\_k} value. The chosen value of 1000 is arbitrary, but sufficiently large to ensure that any additional terms beyond this point would not substantially change the resulting p-value and its interpretation. 
 
-\vspace{3in}
-
+\medskip
+ \noindent As the individual terms are calculated, they are stored in a vector, after which their sum is computed. This sum is then used in the final formula that returns the desired p-value.
+ \vspace{.25cm}
+\lstinputlisting[language=R, firstline=39,lastline=62]{PS01_DP.R} 
+	\begin{verbatim}
+	[1] 5.652523e-29
+\end{verbatim}
+\noindent The obtained p-value is much smaller than the 0.05 significance threshold, so we can reject the null hypothesis. Since this is a Kolmogorov–Smirnov test, the null hypothesis is that the data were sampled from the same distribution as the reference distribution. This result checks out, given that our empirical distribution consists of 1,000 Cauchy random variables and the reference distribution is normal. Because the Cauchy distribution is different from the normal distribution (it can have heavier tails), the conducted KS test detects this dissimilarity and allows us to reject the null hypothesis.
+\newpage
 \section*{Question 2}
 \noindent Estimate an OLS regression in \texttt{R} that uses the Newton-Raphson algorithm (specifically \texttt{BFGS}, which is a quasi-Newton method), and show that you get the equivalent results to using \texttt{lm}. Use the code below to create your data.
 \vspace{.5cm}
-\lstinputlisting[language=R, firstline=51,lastline=53]{PS01.R} 
+\lstinputlisting[language=R, firstline=69,lastline=71]{PS01_DP.R} 
+\vspace{.5cm}
+\section*{Solution - Problem 2} 
+Before running the regression, we will take a look at the data to make sure the model choice makes sense: 
+\lstinputlisting[language=R, firstline=74,lastline=74]{PS01_DP.R} 
+	\begin{figure}[h!]\centering
+	\caption{\footnotesize scatterplot of X and Y}
+	\label{fig:plot_1}
+	\includegraphics[width=.82\textwidth]{scatter_xy.pdf}
+\end{figure} 
+\newpage
+\lstinputlisting[language=R, firstline=81,lastline=98]{PS01_DP.R} 
+\begin{verbatim}
+Intercept: 0.13917 
+Slope: 2.726695 
+\end{verbatim}
+\lstinputlisting[language=R, firstline=78,lastline=79]{PS01_DP.R} 
+\begin{verbatim}
+	Coefficients:
+	Estimate Std. Error t value Pr(>|t|)    
+	(Intercept)  0.13919    0.25276   0.551    0.582    
+	x            2.72670    0.04159  65.564   <2e-16 ***
+	---
+	Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+\end{verbatim}
+\noindent The main difference between the MLE and OLS approaches lies in the assumptions they make. In the MLE framework, we have to assume a specific probability distribution for the outcome variable. For a linear model, we assume a normal distribution with mean \(X\beta\) and variance \(\sigma^{2}\). The MLE approach then estimates the coefficients \(\beta\) and the variance \(\sigma^{2}\) by maximising the likelihood function, so by finding the values that make the observed data most probable. This is done by constructing the log-likelihood function for \(\beta\) and \(\sigma\) and optimising it using the Newton-Raphson algorithm.
 
+\medskip
+\noindent In contrast, the ordinary least squares (OLS) method, implemented in the \texttt{lm} function, estimates \(\beta\) by minimising the sum of squared residuals. While OLS does not require a specific distribution for the outcome, it does assume that the errors are normally distributed. For a linear model that fulfils this assumption, OLS is equivalent to MLE. This explains why the coefficients obtained using \texttt{lm} and those obtained by optimising the log-likelihood function using \texttt{optim} are very close in value, as we expected.
 \end{document}

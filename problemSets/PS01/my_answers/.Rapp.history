@@ -1,517 +1,3 @@
-rm(list=ls())#
-# detach all libraries#
-detachAllPackages <- function() {#
-  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
-  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
-  package.list <- setdiff(package.list, basic.packages)#
-  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
-}#
-detachAllPackages()
-pkgTest <- function(pkg){#
-  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
-  if (length(new.pkg)) #
-    install.packages(new.pkg,  dependencies = TRUE)#
-  sapply(pkg,  require,  character.only = TRUE)#
-}
-lapply(c(),  pkgTest)
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-set.seed(123)#
-# generate data #
-data <- (rcauchy(1000, location = 0, scale = 1))
-data
-ECDF <- ecdf(data)#
-empiricalCDF <- ECDF(data)
-D <- max(abs(empiricalCDF - pnorm(data)))#
-D
-install.packages("dgof")#
-library("dgof")
-ks.test(data, "pnorm")
-d = rnorm(1000)#
-ks.test(data, d)
-d = pnorm(1000)#
-ks.test(data, d)
-d = pnorm(data)#
-ks.test(data, d)
-ks.test(data, "pnorm")
-set.seed(123)#
-# generate data #
-data <- (rcauchy(1000, location = 0, scale = 1))#
-# create empirical distribution of observed data#
-ECDF <- ecdf(data)#
-empiricalCDF <- ECDF(data)#
-# generate test statistic#
-D <- max(abs(empiricalCDF - pnorm(data)))#
-D
-rm(list=ls())#
-# detach all libraries#
-detachAllPackages <- function() {#
-  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
-  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
-  package.list <- setdiff(package.list, basic.packages)#
-  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
-}#
-detachAllPackages()
-pkgTest <- function(pkg){#
-  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
-  if (length(new.pkg)) #
-    install.packages(new.pkg,  dependencies = TRUE)#
-  sapply(pkg,  require,  character.only = TRUE)#
-}#
-#
-# here is where you load any necessary packages#
-# ex: stringr#
-# lapply(c("stringr"),  pkgTest)#
-#
-lapply(c(),  pkgTest)
-set.seed(123)#
-# generate data #
-data <- (rcauchy(1000, location = 0, scale = 1))#
-# create empirical distribution of observed data#
-ECDF <- ecdf(data)#
-empiricalCDF <- ECDF(data)#
-# generate test statistic#
-D <- max(abs(empiricalCDF - pnorm(data)))
-D
-install.packages("dgof")#
-library("dgof")
-ks.test(data, "pnorm")#
-ks.test(data, "pnorm")$statistic#
-ks.test(data, "pnorm")$p.value
-exp(1)
-ks_pvalue <- function(D, tol = 1e-8, stop_k = 1000) {#
-	k <- 1#
-	result <- Inf#
-	sum <- 0 #
-#
-while (term > tol && k < stop_k) {#
-	result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-	s <- s + result#
-	k <- k + 1#
-	}#
-	p_value <- sqrt(2*pi)/D * sum #
-	return p_value #
-}
-ks_pvalue <- function(D, tol = 1e-8, stop_k = 1000) {#
-	k <- 1#
-	result <- Inf#
-	sum <- 0 #
-#
-while (result > tol && k < stop_k) {#
-	result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-	s <- s + result#
-	k <- k + 1#
-	}#
-	p_value <- sqrt(2*pi)/D * sum #
-	return p_value #
-}
-ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
-	k <- 1#
-	result <- Inf#
-	sum <- 0 #
-#
-while (result > tol && k < stop_k) {#
-	result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-	s <- s + result#
-	k <- k + 1#
-	}#
-	p_value <- sqrt(2*pi)/d * sum #
-	return p_value #
-}
-p <- ks_value(D)
-p <- ks_pvalue(D)
-ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
-	k <- 1#
-	result <- Inf#
-	sum <- 0 #
-#
-	while (result > tol && k < stop_k) {#
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-		s <- s + result#
-		k <- k + 1#
-	}#
-	p_value <- sqrt(2*pi)/d * sum #
-	return p_value #
-}
-ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
-	k <- 1#
-	result <- Inf#
-	sum <- 0 #
-#
-	while (result > tol && k < stop_k) {#
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-		sum <- sum + result#
-		k <- k + 1#
-	}#
-	p_value <- sqrt(2*pi)/d * sum #
-	return p_value #
-}
-p <- ks_pvalue(D)
-ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
-	k <- 1#
-	result <- Inf#
-	sum <- 0 #
-#
-	while (result > tol && k < stop_k) {#
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-		sum <- sum + result#
-		k <- k + 1#
-	}#
-	p_value <- sqrt(2*pi)/d * sum #
-	return p_value #
-}
-ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
-	k <- 1#
-	result <- Inf#
-	s <- 0 #
-#
-	while (result > tol && k < stop_k) {#
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-		s <- s + result#
-		k <- k + 1#
-	}#
-	p_value <- sqrt(2*pi)/d * s#
-	return p_value #
-}
-ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
-	k <- 1#
-	result <- Inf#
-	s <- 0 #
-#
-	while (result > tol && k < stop_k) {#
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-		s <- s + result#
-		k <- k + 1#
-	}#
-	p_value <- sqrt(2*pi)/d * s#
-	p_value #
-}
-p <- ks_pvalue(D)
-p
-ks.test(data, "pnorm")#
-ks.test(data, "pnorm")$statistic#
-ks.test(data, "pnorm")$p.value
-pv <- 1 - p#
-pv
-p <- ks_pvalue(D)
-pv <- 1 - p
-pv
-p <- ks_pvalue(D)#
-p
-data <- (rcauchy(1000, location = 0, scale = 1))#
-# create empirical distribution of observed data#
-ECDF <- ecdf(data)#
-empiricalCDF <- ECDF(data)#
-# generate test statistic#
-D <- max(abs(empiricalCDF - pnorm(data)))#
-D
-ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
-	k <- 1#
-	result <- Inf#
-	s <- 0 #
-#
-	while (result > tol && k < stop_k) {#
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-		s <- s + result#
-		k <- k + 1#
-	}#
-	p_value <- sqrt(2*pi)/d * s#
-	p_value #
-}
-p <- ks_pvalue(D)#
-p
-ks.test(data, "pnorm")#
-ks.test(data, "pnorm")$statistic#
-ks.test(data, "pnorm")$p.value
-ks.test(data, "pnorm")
-ks.test(data, "pnorm")$p.value
-ks_test <- ks.test(data, "pnorm", mean = mean(data), sd = sd(data))#
-ks_test$statistic#
-ks_test$p.value
-ks_test <- ks.test(data, "pnorm", mean = mean(data), sd = sd(data))
-ks_test <- ks.test(data, "pnorm", mean = mean(data), sd = sd(data))#
-ks_test
-ks_test <- ks.test(data, "pnorm")#
-ks_test
-D <- max(abs(empiricalCDF - pnorm(data)))#
-D
-ks_pvalue <- function(d, tol = 1e-8, stop_k = 100000) {#
-	k <- 1#
-	result <- Inf#
-	s <- 0 #
-#
-	while (result > tol && k < stop_k) {#
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-		s <- s + result#
-		k <- k + 1#
-	}#
-	p_value <- sqrt(2*pi)/d * s#
-	p_value #
-}
-p <- ks_pvalue(D)
-p
-ks_test <- ks.test(data, "pnorm")#
-ks_test$p.value
-ks_test <- ks.test(data, "pnorm")#
-options(digits = 22)   # show more digits#
-ks_test$p.value
-ks_test <- ks.test(data, "pnorm")#
-options(digits = 30)   # show more digits#
-ks_test$p.value
-ks_test <- ks.test(data, "pnorm")#
-options(digits = 22)   # show more digits#
-ks_test$p.value
-ks_pvalue <- function(d, tol = 1e-20, stop_k = 100000) {#
-	k <- 1#
-	result <- Inf#
-	s <- 0 #
-#
-	while (result > tol && k < stop_k) {#
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-		s <- s + result#
-		k <- k + 1#
-	}#
-	p_value <- sqrt(2*pi)/d * s#
-	p_value #
-}
-p <- ks_pvalue(D)#
-p
-ks_pvalue <- function(d, tol = 1e-8, stop_k = 100000) {#
-	k <- 1#
-	result <- Inf#
-	s <- 0 #
-#
-	while (result > tol && k < stop_k) {#
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-		s <- s + result#
-		k <- k + 1#
-	}#
-	p_value <- sqrt(2*pi)/d * s#
-	p_value #
-}
-p <- ks_pvalue(D)#
-p
-set.seed(123)#
-# generate data #
-data <- (rcauchy(1000, location = 0, scale = 1))#
-# create empirical distribution of observed data#
-ECDF <- ecdf(data)#
-empiricalCDF <- ECDF(data)#
-# generate test statistic#
-D <- max(abs(empiricalCDF - pnorm(data)))#
-D
-rm(list=ls())#
-# detach all libraries#
-detachAllPackages <- function() {#
-  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
-  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
-  package.list <- setdiff(package.list, basic.packages)#
-  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
-}#
-detachAllPackages()
-pkgTest <- function(pkg){#
-  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
-  if (length(new.pkg)) #
-    install.packages(new.pkg,  dependencies = TRUE)#
-  sapply(pkg,  require,  character.only = TRUE)#
-}
-lapply(c(),  pkgTest)
-set.seed(123)#
-# generate data #
-data <- (rcauchy(1000, location = 0, scale = 1))#
-# create empirical distribution of observed data#
-ECDF <- ecdf(data)#
-empiricalCDF <- ECDF(data)#
-# generate test statistic#
-D <- max(abs(empiricalCDF - pnorm(data)))#
-D
-ks_test <- ks.test(data, "pnorm")
-ks_test <- ks.test(data, "pnorm")#
-ks_test
-set.seed(123)#
-# generate data #
-data <- (rcauchy(1000, location = 0, scale = 1))#
-# create empirical distribution of observed data#
-ECDF <- ecdf(data)#
-empiricalCDF <- ECDF(data)#
-# generate test statistic#
-D <- max(abs(empiricalCDF - pnorm(data)))#
-D
-set.seed(123)
-data <- (rcauchy(1000, location = 0, scale = 1))
-ECDF <- ecdf(data)#
-empiricalCDF <- ECDF(data)
-D <- max(abs(empiricalCDF - pnorm(data)))
-D
-ks_pvalue <- function(d, tol = 1e-8, stop_k = 100000) {#
-	k <- 1#
-	result <- Inf#
-	s <- 0 #
-#
-	while (result > tol && k < stop_k) {#
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-		s <- s + result#
-		k <- k + 1#
-	}#
-	p_value <- sqrt(2*pi)/d * s#
-	p_value #
-}
-p <- ks_pvalue(D)#
-p
-ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
-	k <- 1#
-	result <- Inf#
-	s <- 0 #
-#
-	while (result > tol && k < stop_k) {#
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-		s <- s + result#
-		k <- k + 1#
-	}#
-	p_value <- sqrt(2*pi)/d * s#
-	p_value #
-}
-p <- ks_pvalue(D)#
-p
-rm(list=ls())#
-# detach all libraries#
-detachAllPackages <- function() {#
-  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
-  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
-  package.list <- setdiff(package.list, basic.packages)#
-  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
-}#
-detachAllPackages()
-pkgTest <- function(pkg){#
-  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
-  if (length(new.pkg)) #
-    install.packages(new.pkg,  dependencies = TRUE)#
-  sapply(pkg,  require,  character.only = TRUE)#
-}
-lapply(c(),  pkgTest)
-set.seed(123)#
-# generate data #
-data <- (rcauchy(1000, location = 0, scale = 1))#
-# create empirical distribution of observed data#
-ECDF <- ecdf(data)#
-empiricalCDF <- ECDF(data)#
-# generate test statistic#
-D <- max(abs(empiricalCDF - pnorm(data)))#
-D
-data <- (rcauchy(1000, location = 0, scale = 1))#
-# create empirical distribution of observed data#
-ECDF <- ecdf(data)#
-empiricalCDF <- ECDF(data)#
-# generate test statistic#
-D <- max(abs(empiricalCDF - pnorm(data)))#
-D
-set.seed(123)#
-# generate data #
-data <- (rcauchy(1000, location = 0, scale = 1))#
-# create empirical distribution of observed data#
-ECDF <- ecdf(data)#
-empiricalCDF <- ECDF(data)#
-# generate test statistic#
-D <- max(abs(empiricalCDF - pnorm(data)))#
-D
-ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
-	k <- 1#
-	result <- Inf#
-	s <- 0 #
-#
-	while (result > tol && k < stop_k) {#
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-		s <- s + result#
-		k <- k + 1#
-	}#
-	p_value <- sqrt(2*pi)/d * s#
-	p_value #
-}
-p <- ks_pvalue(D)#
-p
-ks_test <- ks.test(data, "pnorm")#
-ks_test#
-ks_test$p.value
-set.seed(123)#
-ks_test <- ks.test(data, "pnorm")#
-ks_test#
-ks_test$p.value
-rm(list=ls())#
-# detach all libraries#
-detachAllPackages <- function() {#
-  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
-  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
-  package.list <- setdiff(package.list, basic.packages)#
-  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
-}#
-detachAllPackages()
-pkgTest <- function(pkg){#
-  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
-  if (length(new.pkg)) #
-    install.packages(new.pkg,  dependencies = TRUE)#
-  sapply(pkg,  require,  character.only = TRUE)#
-}
-lapply(c(),  pkgTest)
-set.seed(123)
-data <- (rcauchy(1000, location = 0, scale = 1))#
-# create empirical distribution of observed data#
-ECDF <- ecdf(data)#
-empiricalCDF <- ECDF(data)#
-# generate test statistic#
-D <- max(abs(empiricalCDF - pnorm(data)))#
-D
-set.seed(123)#
-# generate data #
-data <- (rcauchy(1000, location = 0, scale = 1))#
-# create empirical distribution of observed data#
-ECDF <- ecdf(data)#
-empiricalCDF <- ECDF(data)#
-# generate test statistic#
-D <- max(abs(empiricalCDF - pnorm(data)))#
-D
-ks_pvalue <- function(data = data, d) {#
-	s <- 0#
-	for k in length(data) {#
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-		s <- s + result#
-	}#
-	p_value <- sqrt(2*pi)/d * s#
-	p_value #
-}
-ks_pvalue <- function(data = data, d = D) {#
-	s <- 0#
-	for k in length(data) {#
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-		s <- s + result#
-	}#
-	p_value <- sqrt(2*pi)/d * s#
-	p_value #
-}
-ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {#
-	k <- 1#
-	result <- Inf#
-	s <- 0 #
-#
-	while (result > tol && k < stop_k) {#
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-		s <- s + result#
-		k <- k + 1#
-	}#
-	p_value <- sqrt(2*pi)/d * s#
-	p_value #
-}
-p <- ks_pvalue(d = D)#
-p
-ks_pvalue <- function(data = data, d = D) {#
-	s <- 0#
-	for (k in 1:length(data)) {#
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
-		s <- s + result#
-	}#
-	p_value <- sqrt(2*pi)/d * s#
-	p_value #
-}
-p <- ks_pval()#
-p
 ks_pval <- function(data = data, d = D) {#
 	s <- 0#
 	for (k in 1:length(data)) {#
@@ -666,3 +152,827 @@ set.seed (123)#
 data <- data.frame(x = runif(200, 1, 10))#
 data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)#
 plot(data$x, data$y, ylab = "Y", xlab = "X")
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c(),  pkgTest)
+set.seed(123)#
+# generate data #
+data <- (rcauchy(1000, location = 0, scale = 1))#
+# create empirical distribution of observed data#
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)#
+# generate test statistic#
+D <- max(abs(empiricalCDF - pnorm(data)))#
+D
+s_pval <- function(data, d) {#
+	s <- 0#
+	for (k in 1:length(data)) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+p <- ks_pval(data, D)#
+p
+ks_pval <- function(data, d) {#
+	s <- 0#
+	for (k in 1:length(data)) {#
+		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))#
+		s <- s + result#
+	}#
+	p_value <- sqrt(2*pi)/d * s#
+	p_value #
+}
+p <- ks_pval(data, D)
+D)#
+p
+ks_test <- ks.test(data, "pnorm")#
+ks_test#
+ks_test$p.value
+ks_p_vec <- function(d, k_max = 1000) {#
+  k <- 1:k_max#
+  terms <- exp(-((2*k - 1)^2 * pi^2) / (8*d^2))#
+  s <- sum(terms)#
+  p_value <- sqrt(2*pi)/d * s#
+  p_value#
+}
+p <- ks_p_vec(D)#
+p
+ks_pvalue <- function(d, max_k = 1000) {#
+  k <- 1:max_k#
+  terms <- exp(-((2*k - 1)^2 * pi^2) / (8*d^2))#
+  s <- sum(terms)#
+  p_value <- sqrt(2*pi)/d * s#
+  return p_value#
+}
+ks_pvalue <- function(d, max_k = 1000) {#
+  k <- 1:max_k#
+  terms <- exp(-((2*k - 1)^2 * pi^2) / (8*d^2))#
+  s <- sum(terms)#
+  p_value <- sqrt(2*pi)/d * s#
+  return(p_value)#
+}
+p <- ks_pvalue(D)#
+p
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+plot(data$x, data$y, ylab = "Y", xlab = "X")
+png(file = "scatter_xy.pdf")#
+plot(data$x, data$y, ylab = "Y", xlab = "X")#
+dev.off()
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)
+stargazer(lm_model)
+lapply(c("stargazer"),  pkgTest)
+stargazer(lm_model)
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)#
+	k <- ncol(X)#
+	beta <- theta[1:k]#
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta#
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl)#
+}#
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)$coefficients
+linear.MLE$par#
+sigma <- linear.MLE$par[3]^2 #
+sigma
+linear.MLE$par[1:2]
+sigma <- sqrt(linear.MLE$par[3])#
+sigma
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c(),  pkgTest)
+set.seed(123)#
+# generate data #
+data <- (rcauchy(1000, location = 0, scale = 1))#
+# create empirical distribution of observed data#
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)#
+# generate test statistic#
+D <- max(abs(empiricalCDF - pnorm(data)))
+# generate p-value #
+# max_k is an arbitrary value #
+# as k increases the term gets closer to 0#
+ks_pvalue <- function(d, max_k = 1000) {#
+  k <- 1:max_k#
+  # save individual terms in a vector#
+  terms <- exp(-((2*k - 1)^2 * pi^2) / (8*d^2))#
+  # sum the elements of the vector#
+  s <- sum(terms)#
+  # implement final p-value formula#
+  p_value <- sqrt(2*pi)/d * s#
+  return(p_value)#
+}
+p <- ks_pvalue(D)#
+p
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)$coefficients
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+# remove objects#
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+   basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+   package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+   package.list <- setdiff(package.list, basic.packages)#
+   if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+ }#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c(),  pkgTest)
+set.seed(123)#
+# generate data #
+data <- (rcauchy(1000, location = 0, scale = 1))#
+# create empirical distribution of observed data#
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)#
+# generate test statistic#
+D <- max(abs(empiricalCDF - pnorm(data)))
+ks_pvalue <- function(d, max_k = 1000) {#
+  k <- 1:max_k#
+  # save individual terms in a vector#
+  terms <- exp(-((2*k - 1)^2 * pi^2) / (8*d^2))#
+  # sum the elements of the vector#
+  s <- sum(terms)#
+  # implement final p-value formula#
+  p_value <- sqrt(2*pi)/d * s#
+  return(p_value)#
+}#
+#
+p <- ks_pvalue(D)#
+p
+set.seed (123) #
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)#
+#
+# taking a look at the data #
+png(file = "scatter_xy.pdf")#
+plot(data$x, data$y, ylab = "Y", xlab = "X")
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)$coefficients
+inear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}#
+#
+# maximising the likelihood function calculated above #
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")#
+#
+# look at the parameters obtained #
+linear.MLE$par
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+set.seed (123)
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)$coefficients
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+linear.MLE$par[1:2]
+summary(lm_model)
+set.seed (123) #
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+plot(data$x, data$y, ylab = "Y", xlab = "X")
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par[1:2]
+plot(data$x, data$y, ylab = "Y", xlab = "X")
+set.seed (123) #
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+   basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+   package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+   package.list <- setdiff(package.list, basic.packages)#
+   if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+ }#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}#
+#
+# here is where you load any necessary packages#
+# ex: stringr#
+# lapply(c("stringr"),  pkgTest)#
+#
+lapply(c(),  pkgTest)
+set.seed (123) #
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(0,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+linear.MLE <- optim(fn = linear.lik, par = c(0,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)
+print(paste("Intercept:", linear.MLE$par[1]))#
+print(paste("Slope:", linear.MLE$par[2]))
+cat("Intercept:", linear.MLE$par[1], "\n",#
+    "Slope:", linear.MLE$par[2], "\n")
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+   basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+   package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+   package.list <- setdiff(package.list, basic.packages)#
+   if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+ }#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c(),  pkgTest)
+set.seed(123)#
+# generate data #
+data <- (rcauchy(1000, location = 0, scale = 1))#
+# create empirical distribution of observed data#
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)#
+# generate test statistic#
+D <- max(abs(empiricalCDF - pnorm(data)))
+ks_pvalue <- function(d, max_k = 1000) {#
+  k <- 1:max_k#
+  # save individual terms in a vector#
+  terms <- exp(-((2*k - 1)^2 * pi^2) / (8*d^2))#
+  # sum the elements of the vector#
+  s <- sum(terms)#
+  # implement final p-value formula#
+  p_value <- sqrt(2*pi)/d * s#
+  return(p_value)#
+}
+p <- ks_pvalue(D)#
+p
+set.seed (123) #
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+cat("Intercept:", linear.MLE$par[1], "\n",#
+    "Slope:", linear.MLE$par[2], "\n")
+linear.MLE <- optim(fn = linear.lik, par = c(0,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+cat("Intercept:", linear.MLE$par[1], "\n",#
+    "Slope:", linear.MLE$par[2], "\n")
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+cat("Intercept:", linear.MLE$par[1], "\n",#
+    "Slope:", linear.MLE$par[2], "\n")
+set.seed (123) #
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)
+linear.lik <- function(theta, y, x) {#
+	n <- nrow(x)  # no. observations #
+	k <- ncol(x)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, x = cbind(1, data$x), method = "BFGS")
+linear.lik <- function(theta, y, x) {#
+	n <- nrow(x)  # no. observations #
+	k <- ncol(x)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - x%*%beta   # residuals #
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+inear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, x = cbind(1, data$x), method = "BFGS")
+cat("Intercept:", linear.MLE$par[1], "\n",#
+    "Slope:", linear.MLE$par[2], "\n")
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - x%*%beta   # residuals #
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+cat("Intercept:", linear.MLE$par[1], "\n",#
+    "Slope:", linear.MLE$par[2], "\n")
+set.seed (123)
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -.5*n*log(2*pi) -.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+cat("Intercept:", linear.MLE$par[1], "\n",#
+    "Slope:", linear.MLE$par[2], "\n")
+linear.MLE <- optim(fn = linear.lik, par = c(0,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+cat("Intercept:", linear.MLE$par[1], "\n",#
+    "Slope:", linear.MLE$par[2], "\n")
+set.seed (123) #
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+lm_model <- lm(data$y ~ data$x, data = data)#
+summary(lm_model)
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -.5*n*log(2*pi) -.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+set.seed (123) #
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+lm_model <- lm(data$y ~ data$x, data = data)#
+summary(lm_model)
+set.seed (123) #
+# implement the log of the likelihood function #
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -.5*n*log(2*pi) -.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(0,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+cat("Intercept:", linear.MLE$par[1], "\n",#
+    "Slope:", linear.MLE$par[2], "\n")
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+cat("Intercept:", linear.MLE$par[1], "\n",#
+    "Slope:", linear.MLE$par[2], "\n")
+linear.MLE <- optim(fn = linear.lik, par = c(0,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+linear.MLE <- optim(fn = linear.lik, par = c(1,0,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+linear.MLE <- optim(fn = linear.lik, par = c(1,0,0), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,0), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE <- optim(fn = linear.lik, par = c(1,0,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+linear.MLE <- optim(fn = linear.lik, par = c(0,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+linear.MLE <- optim(fn = linear.lik, par = c(0,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+cat("Intercept:", linear.MLE$par[1], "\n",#
+    "Slope:", linear.MLE$par[2], "\n")
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+   basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+   package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+   package.list <- setdiff(package.list, basic.packages)#
+   if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+ }#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c(),  pkgTest)
+set.seed (123) #
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+lm_model <- lm(data$y ~ data$x, data = data)#
+summary(lm_model)
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -.5*n*log(2*pi) -.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(0,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+cat("Intercept:", linear.MLE$par[1], "\n",#
+    "Slope:", linear.MLE$par[2], "\n")
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+cat("Intercept:", linear.MLE$par[1], "\n",#
+    "Slope:", linear.MLE$par[2], "\n")
+linear.MLE$par
+linear.MLE <- optim(fn = linear.lik, par = c(0,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+lm_model <- lm(y ~ x, data = data)#
+summary(lm_model)
+set.seed (123) #
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -.5*n*log(2*pi) -.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")#
+#
+# look at the parameters obtained#
+linear.MLE$par#
+cat("Intercept:", linear.MLE$par[1], "\n",#
+    "Slope:", linear.MLE$par[2], "\n")
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+   basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+   package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+   package.list <- setdiff(package.list, basic.packages)#
+   if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+ }#
+detachAllPackages()
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, input = cbind(1, data$x), method = "BFGS")
+set.seed (123) #
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -.5*n*log(2*pi) -.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, input = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+version()
+version
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+   basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+   package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+   package.list <- setdiff(package.list, basic.packages)#
+   if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+ }#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c(),  pkgTest)
+set.seed(123)#
+# generate data #
+data <- (rcauchy(1000, location = 0, scale = 1))#
+# create empirical distribution of observed data#
+ECDF <- ecdf(data)#
+empiricalCDF <- ECDF(data)#
+# generate test statistic#
+D <- max(abs(empiricalCDF - pnorm(data)))
+ks_pvalue <- function(d, max_k = 1000) {#
+  k <- 1:max_k#
+  # save individual terms in a vector#
+  terms <- exp(-((2*k - 1)^2 * pi^2) / (8*d^2))#
+  # sum the elements of the vector#
+  s <- sum(terms)#
+  # implement final p-value formula#
+  p_value <- sqrt(2*pi)/d * s#
+  return(p_value)#
+}#
+#
+p <- ks_pvalue(D)#
+p
+set.seed (123) #
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+lm_model <- lm(data$y ~ data$x, data = data)#
+summary(lm_model)
+set.seed (123) #
+# implement the log of the likelihood function #
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -.5*n*log(2*pi) -.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(0,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+cat("Intercept:", linear.MLE$par[1], "\n",#
+    "Slope:", linear.MLE$par[2], "\n")
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+cat("Intercept:", linear.MLE$par[1], "\n",#
+    "Slope:", linear.MLE$par[2], "\n")
+linear.MLE$par
+set.seed (123) #
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+lm_model <- lm(data$y ~ data$x, data = data)#
+summary(lm_model)
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)  # no. observations #
+	k <- ncol(X)  # no. independent variables (+ intercept)#
+	beta <- theta[1:k]  # coefficients #
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta   # residuals #
+	logl <- -.5*n*log(2*pi) -.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))#
+	return (-logl) # negative because optim finds the minimum #
+}
+linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, #
+y = data$y, X = cbind(1, data$x), method = "BFGS")
+linear.MLE$par#
+cat("Intercept:", linear.MLE$par[1], "\n",#
+    "Slope:", linear.MLE$par[2], "\n")
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+   basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+   package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+   package.list <- setdiff(package.list, basic.packages)#
+   if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+ }#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c(),  pkgTest)
+set.seed (123) #
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)#
+	k <- ncol(X)#
+	beta <- theta[1:k]#
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta#
+	logl <- -0.5*n*log(2*pi)-0.5*n*log(sigma2) - ((t(e) %*% e)/ (2*sigma2))#
+	return(-logl)#
+}
+linear.mle <- optim(fn = linear.lik, par=c(1,1,1), hessian=TRUE,#
+y = data$y, X = cbind(1, data$x), method = "BFGS")#
+linear.mle$par
+linear.mle <- optim(fn = linear.lik, par=c(0,1,1), hessian=TRUE,#
+y = data$y, X = cbind(1, data$x), method = "BFGS")#
+linear.mle$par
+set.seed (123)
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)#
+#
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)#
+	k <- ncol(X)#
+	beta <- theta[1:k]#
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta#
+	logl <- -0.5*n*log(2*pi)-0.5*n*log(sigma2) - ((t(e) %*% e)/ (2*sigma2))#
+	return(-logl)#
+}#
+#
+linear.mle <- optim(fn = linear.lik, par=c(0,1,1), hessian=TRUE,#
+y = data$y, X = cbind(1, data$x), method = "BFGS")#
+linear.mle$par
+set.seed (123)
+data <- data.frame(x = runif(200, 1, 10))#
+data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)#
+#
+linear.lik <- function(theta, y, X) {#
+	n <- nrow(X)#
+	k <- ncol(X)#
+	beta <- theta[1:k]#
+	sigma2 <- theta[k+1]^2#
+	e <- y - X%*%beta#
+	logl <- -0.5*n*log(2*pi)-0.5*n*log(sigma2) - ((t(e) %*% e)/ (2*sigma2))#
+	return(-logl)#
+}#
+#
+linear.mle <- optim(fn = linear.lik, par=c(1,1,1), hessian=TRUE,#
+y = data$y, X = cbind(1, data$x), method = "BFGS")#
+linear.mle$par

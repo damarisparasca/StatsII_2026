@@ -1,0 +1,131 @@
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+set.seed(1234)#
+# create design matrix#
+# only 2 predictors, remember 1st column is 1s#
+X <- rnorm(100)#
+# define "real"/true relationship#
+real_beta <- 3
+y_binom <- rbinom(100, 1, exp(X*real_beta)/(1+exp(X*real_beta)))
+binom_likelihood <- function(outcome, input, parameter) {#
+  # calculate probability of success on each trial#
+  p <- exp(parameter[1] + parameter[2]*input)/(1+exp(parameter[1] + parameter[2]*input))#
+  # access probability density function (pdf) for binomial distribution#
+  # specifically, calculate log.likelihood function #
+  # using sum and negative since its' log, not normal likelihood function#
+  -sum(dbinom(outcome, 1, p, log=TRUE))#
+}
+results_binom <- optim(fn=binom_likelihood, outcome=y_binom, input=X, par=0:1, hessian=T, method="BFGS")#
+# print our estimated coefficients (intercept and beta_1)#
+results_binom$par#
+# confirm that we get the same thing in with glm()#
+coef(glm(y_binom~X, family=binomial))
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+set.seed(1234)#
+# create design matrix#
+# only 2 predictors, remember 1st column is 1s#
+X <- rnorm(100)#
+# define "real"/true relationship#
+real_beta <- 3
+y_binom <- rbinom(100, 1, exp(X*real_beta)/(1+exp(X*real_beta)))
+binom_likelihood <- function(outcome, input, parameter) {#
+  # calculate probability of success on each trial#
+  p <- exp(parameter[1] + parameter[2]*input)/(1+exp(parameter[1] + parameter[2]*input))#
+  # access probability density function (pdf) for binomial distribution#
+  # specifically, calculate log.likelihood function #
+  # using sum and negative since its' log, not normal likelihood function#
+  -sum(dbinom(outcome, 1, p, log=TRUE))#
+}
+results_binom <- optim(fn=binom_likelihood, outcome=y_binom, input=X, par=0:1, hessian=T, method="BFGS")
+coef(glm(y_binom~X, family=binomial))
+y_norm <- X*real_beta + rnorm(100, 0, 0.5)
+norm_likelihood <- function(outcome, input, parameter) {#
+  n      <- nrow(input)#
+  k      <- ncol(input)#
+  beta   <- parameter[1:k]#
+  sigma2 <- parameter[k+1]^2#
+  e      <- outcome - input%*%beta#
+  logl   <- -.5*n*log(2*pi)-.5*n*log(sigma2) - ( (t(e) %*% e)/ (2*sigma2) )#
+  return(-logl)#
+}
+norm_likelihood2 <- function(outcome, input, parameter) {#
+  n <- ncol(input)#
+  beta <- parameter[1:n]#
+  sigma <- sqrt(parameter[1+n])#
+  -sum(dnorm(outcome, input %*% beta, sigma, log=TRUE))#
+}
+results_norm <- optim(fn=norm_likelihood, outcome=y_norm, input=cbind(1, X), par=c(1,1,1), hessian=T, method="BFGS")#
+results_norm2 <- optim(fn=norm_likelihood, outcome=y_norm, input=cbind(1, X), par=c(1,1,1), hessian=T, method="BFGS")#
+# print our estimated coefficients (intercept and beta_1)#
+# get same results regardless of which log-likelihood function we use#
+results_norm$par; results_norm2$par
+coef(lm(y_norm~X))
+X <- rnorm(100)
+real_beta0 <- 0.5      # true intercept#
+real_beta1 <- 0.8
+lambda <- exp(real_beta0 + real_beta1 * X)#
+y_pois <- rpois(100, lambda)
+X <- rnorm(100)
+real_beta0 <- 0.5      # true intercept#
+real_beta1 <- 0.8
+lambda <- exp(real_beta0 + real_beta1 * X)#
+y_pois <- rpois(100, lambda)
+poisson_likelihood <- function(outcome, input, parameter) {#
+   lambda <- exp(parameter[1] + parameter[2] * input)#
+  -sum(dpois(outcome, lambda = lambda, log = TRUE))#
+}
+results_pois <- optim(fn=poisson_likelihood, outcome=y_pois, input=X, par=0:1, hessian=T, method="BFGS")
+results_pois$par
+coef(glm(y_pois~X, family='poisson'))
+poisson_likelihood <- function(outcome, input, parameter) {#
+   lambda <- exp(parameter[1] + parameter[2] * input)#
+  -sum(dpois(outcome, lambda, log = TRUE))#
+}
+results_pois <- optim(fn=poisson_likelihood, outcome=y_pois, input=X, par=0:1, hessian=T, method="BFGS")#
+#
+# compare your results to the built-in glm() function#
+results_pois$par#
+coef(glm(y_pois~X, family='poisson'))
+set.seed(1234)#
+lambda <- exp(real_beta0 + real_beta1 * X)#
+y_pois <- rpois(100, lambda)
+poisson_likelihood <- function(outcome, input, parameter) {#
+   lambda <- exp(parameter[1] + parameter[2] * input)#
+  -sum(dpois(outcome, lambda, log = TRUE))#
+}
+results_pois <- optim(fn=poisson_likelihood, outcome=y_pois, input=X, par=0:1, hessian=T, method="BFGS")
+results_pois$par#
+coef(glm(y_pois~X, family='poisson'))
+set.seed(123)#
+lambda <- exp(real_beta0 + real_beta1 * X)#
+y_pois <- rpois(100, lambda)
+poisson_likelihood <- function(outcome, input, parameter) {#
+   lambda <- exp(parameter[1] + parameter[2] * input)#
+  -sum(dpois(outcome, lambda, log = TRUE))#
+}
+results_pois <- optim(fn=poisson_likelihood, outcome=y_pois, input=X, par=0:1, hessian=T, method="BFGS")#
+#
+# compare your results to the built-in glm() function#
+results_pois$par#
+coef(glm(y_pois~X, family='poisson'))

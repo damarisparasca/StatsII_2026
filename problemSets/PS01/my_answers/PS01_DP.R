@@ -8,11 +8,11 @@
 rm(list=ls())
 # detach all libraries
 detachAllPackages <- function() {
-  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")
-  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]
-  package.list <- setdiff(package.list, basic.packages)
-  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)
-}
+   basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")
+   package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]
+   package.list <- setdiff(package.list, basic.packages)
+   if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)
+ }
 detachAllPackages()
 
 # load libraries
@@ -44,72 +44,55 @@ ECDF <- ecdf(data)
 empiricalCDF <- ECDF(data)
 # generate test statistic
 D <- max(abs(empiricalCDF - pnorm(data)))
-D
-# generate p-value 
-# tol threshold is the default from the ks function in R
-# stop_k is an arbitrary chosen safe value 
-ks_pvalue <- function(d, tol = 1e-8, stop_k = 1000) {
-	k <- 1
-	result <- Inf
-	s <- 0 
 
-	while (result > tol && k < stop_k) {
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))
-		s <- s + result
-		k <- k + 1
-	}
-	
-	p_value <- sqrt(2*pi)/d * s
-	p_value 
+# max_k is an arbitrary value 
+# as k increases the term gets closer to 0
+ks_pvalue <- function(d, max_k = 1000) {
+  k <- 1:max_k
+  # save individual terms in a vector
+  terms <- exp(-((2*k - 1)^2 * pi^2) / (8*d^2))
+  # sum the elements of the vector
+  s <- sum(terms)
+  # implement final p-value formula
+  p_value <- sqrt(2*pi)/d * s
+  return(p_value)
 }
 
-ks_pval <- function(data, d) {
-	s <- 0
-	for (k in 1:length(data)) {
-		result <- exp(-((2*k-1)^2 * pi^2) / (8* d^2))
-		s <- s + result
-	}
-	
-	p_value <- sqrt(2*pi)/d * s
-	p_value 
-}
-
-
-
-p <- ks_pval(data, D)
+p <- ks_pvalue(D)
 p
 
-install.packages("dgof")
-library("dgof")
-
-# Perform the K-S test to check if the sample follows a normal distribution
-ks_test <- ks.test(data, "pnorm")
-ks_test
-ks_test$p.value
 #####################
 # Problem 2
 #####################
 
-set.seed (123)
+set.seed (123) 
 data <- data.frame(x = runif(200, 1, 10))
 data$y <- 0 + 2.75*data$x + rnorm(200, 0, 1.5)
+
+# taking a look at the data 
+pdf(file = "scatter_xy.pdf")
 plot(data$x, data$y, ylab = "Y", xlab = "X")
+dev.off()
+
+# fitting the usual lm model
 lm_model <- lm(y ~ x, data = data)
 summary(lm_model)
-
+ 
+# implement the log of the likelihood function 
 linear.lik <- function(theta, y, X) {
-	n <- nrow(X)
-	k <- ncol(X)
-	beta <- theta[1:k]
+	n <- nrow(X)  # no. observations 
+	k <- ncol(X)  # no. independent variables (+ intercept)
+	beta <- theta[1:k]  # coefficients 
 	sigma2 <- theta[k+1]^2
-	e <- y - X%*%beta
-	logl <- -0.5*n*log(2*pi) -0.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))
-	return (-logl)
+	e <- y - X%*%beta   # residuals 
+	logl <- -.5*n*log(2*pi) -.5*n*log(sigma2) - ((t(e) %*% e) / (2*sigma2))
+	return (-logl) # negative because optim finds the minimum 
 }
 
-
-linear.MLE <- optim(fn = linear.lik, par = c(1,1,1), hessian = TRUE, 
+# maximising the likelihood function calculated above 
+linear.MLE <- optim(fn = linear.lik, par = c(0,1,1), hessian = TRUE, 
 y = data$y, X = cbind(1, data$x), method = "BFGS")
 
-
-linear.MLE$par
+# look at the parameters obtained
+cat("Intercept:", linear.MLE$par[1], "\n",
+    "Slope:", linear.MLE$par[2], "\n")
