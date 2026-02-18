@@ -1,0 +1,353 @@
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c(),  pkgTest)
+data <- load(url("https://github.com/ASDS-TCD/StatsII_2026/blob/main/datasets/climateSupport.RData?raw=true"))
+head(data)
+str(data)
+data <- load(url("https://github.com/ASDS-TCD/StatsII_2026/blob/main/datasets/climateSupport.RData?raw=true"))
+data
+load("/Users/damirish/Downloads/climateSupport.RData")
+data <- load(url("https://github.com/ASDS-TCD/StatsII_2026/blob/main/datasets/climateSupport.RData?raw=true"))
+data
+load("/Users/damirish/Downloads/climateSupport.RData")
+data <- load(url("https://github.com/ASDS-TCD/StatsII_2026/blob/main/datasets/climateSupport.RData?raw=true"))
+data
+m(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+rm(list=ls())
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c(),  pkgTest)
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+data <- load(url("https://github.com/ASDS-TCD/StatsII_2026/blob/main/datasets/climateSupport.RData?raw=true"))
+data
+data
+ls()
+head(climateSupport)
+load(url("https://github.com/ASDS-TCD/StatsII_2026/blob/main/datasets/climateSupport.RData?raw=true"))#
+data <- climateSupport
+str(data)
+add_model <- glm(#
+			choice ~ countries + sanctions ,#
+			data = data, family = binomial(link = "logit"))
+summary(add_model)
+str(data)
+null_model <- add_model <- glm(#
+			choice ~ 1 , data = data, #
+			family = binomial(link = "logit"))
+anova(null_model, add_model, test = "LRT")
+add_model <- glm(#
+			choice ~ countries + sanctions ,#
+			data = data, family = binomial(link = "logit"))
+null_model <- add_model <- glm(#
+			choice ~ 1 , data = data, #
+			family = binomial(link = "logit"))
+add_model <- glm(#
+			choice ~ countries + sanctions ,#
+			data = data, family = binomial(link = "logit"))
+null_model <- glm(#
+			choice ~ 1 , data = data, #
+			family = binomial(link = "logit"))
+anova(null_model, add_model, test = "LRT")
+mult_model <- add_model <- glm(#
+			choice ~ countries * sanctions ,#
+			data = data, family = binomial(link = "logit"))
+anova(add_model, mult_model, test = "LRT")
+add_model <- glm(#
+			choice ~ countries + sanctions ,#
+			data = data, family = binomial(link = "logit"))
+mult_model <- glm(#
+			choice ~ countries * sanctions ,#
+			data = data, family = binomial(link = "logit"))
+anova(add_model, mult_model, test = "LRT")
+str(null_model)
+summary(null_model)
+summary(mult_model)
+anova(add_model, mult_model, test = "LRT")
+levels(data$countries)
+levels(data$sanctions)
+add_model <- glm(#
+			choice ~ countries + sanctions ,#
+			data = data, family = binomial(link = "logit"))#
+summary(add_model)
+levels(data$countries)#
+levels(data$sanctions)
+data <- climateSupport
+data$countries <- factor(data$countries, ordered = FALSE)#
+data$sanctions <- factor(data$sanctions, ordered = FALSE)
+add_model <- glm(#
+			choice ~ countries + sanctions ,#
+			data = data, family = binomial(link = "logit"))#
+summary(add_model)
+null_model <- glm(#
+			choice ~ 1 , data = data, #
+			family = binomial(link = "logit"))
+anova(null_model, add_model, test = "LRT")
+mult_model <- glm(#
+			choice ~ countries * sanctions ,#
+			data = data, family = binomial(link = "logit"))
+anova(add_model, mult_model, test = "LRT")
+summary(mult_model)
+load(url("https://github.com/ASDS-TCD/StatsII_2026/blob/main/datasets/climateSupport.RData?raw=true"))#
+data <- climateSupport#
+str(data)#
+#
+data$countries <- factor(data$countries, ordered = FALSE)#
+data$sanctions <- factor(data$sanctions, ordered = FALSE)#
+data$sanctions <- relevel(data$sanctions, ref = "5%")
+add_model <- glm(#
+			choice ~ countries + sanctions ,#
+			data = data, family = binomial(link = "logit"))#
+summary(add_model)
+est_prob <- predict(add_model, data = data.frame(sanctions = "None", countries = "[80 of 192]"))
+est_prob
+levels(data$countries)
+levels(data$sanctions)
+est_prob <- predict(add_model,#
+                    newdata = data.frame(sanctions = "None",#
+                                         countries = "80 of 192"),#
+                    type = "response")
+est_prob
+exp(est_prob)
+data$countries <- factor(data$countries, ordered = FALSE)#
+data$sanctions <- factor(data$sanctions, ordered = FALSE)
+levels(data$countries)#
+levels(data$sanctions)
+add_model <- glm(#
+			choice ~ countries + sanctions ,#
+			data = data, family = binomial(link = "logit"))#
+summary(add_model)
+load(url("https://github.com/ASDS-TCD/StatsII_2026/blob/main/datasets/climateSupport.RData?raw=true"))#
+data <- climateSupport
+data$countries <- factor(data$countries, ordered = FALSE)#
+data$sanctions <- factor(data$sanctions, ordered = FALSE)
+levels(data$countries)#
+levels(data$sanctions)
+add_model <- glm(#
+			choice ~ countries + sanctions ,#
+			data = data, family = binomial(link = "logit"))#
+summary(add_model)
+est_prob <- predict(add_model,#
+                    newdata = data.frame(sanctions = "None",#
+                                         countries = "80 of 192"),#
+                    type = "response")
+est_prob#
+exp(est_prob)
+lapply(c("stargazer"),  pkgTest)
+stargazer(add_model)
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c("stargazer"),  pkgTest)
+# load data#
+load(url("https://github.com/ASDS-TCD/StatsII_2026/blob/main/datasets/climateSupport.RData?raw=true"))#
+data <- climateSupport#
+str(data)
+data$countries <- factor(data$countries, ordered = FALSE)#
+data$sanctions <- factor(data$sanctions, ordered = FALSE)
+levels(data$countries)#
+levels(data$sanctions)
+add_model <- glm(#
+			choice ~ countries + sanctions ,#
+			data = data, family = binomial(link = "logit"))#
+summary(add_model)
+null_model <- glm(#
+			choice ~ 1 , data = data, #
+			family = binomial(link = "logit"))
+summary(null_model)
+anova(null_model, add_model, test = "LRT")
+data$sanctions <- relevel(data$sanctions, ref = "5%")
+add_model5% <- glm(#
+			choice ~ countries + sanctions ,#
+			data = data, family = binomial(link = "logit"))#
+summary(add_model5%)
+add_model5 <- glm(#
+			choice ~ countries + sanctions ,#
+			data = data, family = binomial(link = "logit"))#
+summary(add_model5)#
+stargazer(add_model5)
+est_prob <- predict(add_model,#
+                    newdata = data.frame(sanctions = "None",#
+                                         countries = "80 of 192"),#
+                    type = "response")
+est_prob1 <- predict(add_model,#
+                    newdata = data.frame(sanctions = "None",#
+                                         countries = "80 of 192"),#
+                    type = "response")#
+est_prob2 <- predict(add_model5,#
+                    newdata = data.frame(sanctions = "None",#
+                                         countries = "80 of 192"),#
+                    type = "response")#
+est_prob1#
+est_prob2
+est_prob#
+exp(est_prob)
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}#
+#
+# here is where you load any necessary packages#
+# ex: stringr#
+# lapply(c("stringr"),  pkgTest)#
+#
+lapply(c("stargazer"),  pkgTest)
+load(url("https://github.com/ASDS-TCD/StatsII_2026/blob/main/datasets/climateSupport.RData?raw=true"))#
+data <- climateSupport#
+str(data)#
+#
+# unorder data to obtain more readable levels #
+data$countries <- factor(data$countries, ordered = FALSE)#
+data$sanctions <- factor(data$sanctions, ordered = FALSE)#
+#
+# fit additive model #
+add_model <- glm(#
+			choice ~ countries + sanctions ,#
+			data = data, family = binomial(link = "logit"))#
+summary(add_model)#
+stargazer(add_model)
+null_model <- glm(#
+			choice ~ 1 , data = data, #
+			family = binomial(link = "logit"))
+anova(null_model, add_model, test = "LRT")
+data$sanctions <- relevel(data$sanctions, ref = "5%")#
+#
+# refit the additive model with the new reference category#
+add_model5 <- glm(#
+			choice ~ countries + sanctions ,#
+			data = data, family = binomial(link = "logit"))#
+summary(add_model5)#
+stargazer(add_model5)
+est_prob <- predict(add_model,#
+                    newdata = data.frame(sanctions = "None",#
+                                         countries = "80 of 192"),#
+                    type = "response")#
+est_prob
+mult_model <- glm(#
+			choice ~ countries * sanctions ,#
+			data = data, family = binomial(link = "logit"))
+anova(add_model, mult_model, test = "LRT")
+rm(list=ls())#
+# detach all libraries#
+detachAllPackages <- function() {#
+  basic.packages <- c("package:stats", "package:graphics", "package:grDevices", "package:utils", "package:datasets", "package:methods", "package:base")#
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search()))==1, TRUE, FALSE)]#
+  package.list <- setdiff(package.list, basic.packages)#
+  if (length(package.list)>0)  for (package in package.list) detach(package,  character.only=TRUE)#
+}#
+detachAllPackages()
+pkgTest <- function(pkg){#
+  new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]#
+  if (length(new.pkg)) #
+    install.packages(new.pkg,  dependencies = TRUE)#
+  sapply(pkg,  require,  character.only = TRUE)#
+}
+lapply(c("stargazer"),  pkgTest)
+load(url("https://github.com/ASDS-TCD/StatsII_2026/blob/main/datasets/climateSupport.RData?raw=true"))#
+data <- climateSupport#
+str(data)#
+#
+# unorder data to obtain more readable levels #
+data$countries <- factor(data$countries, ordered = FALSE)#
+data$sanctions <- factor(data$sanctions, ordered = FALSE)#
+#
+# fit additive model #
+add_model <- glm(#
+			choice ~ countries + sanctions ,#
+			data = data, family = binomial(link = "logit"))#
+summary(add_model)#
+stargazer(add_model)#
+#
+# fit null model#
+null_model <- glm(#
+			choice ~ 1 , data = data, #
+			family = binomial(link = "logit"))#
+#
+# perform global null hypothesis test#
+anova(null_model, add_model, test = "LRT")
+# fit null model#
+null_model <- glm(#
+			choice ~ 1 , data = data, #
+			family = binomial(link = "logit"))#
+#
+# perform global null hypothesis test#
+anova(null_model, add_model, test = "LRT")#
+#
+###########################
+# Problem 1, Question 2 #
+###########################
+#
+# relevel model for interpretability #
+data$sanctions <- relevel(data$sanctions, ref = "5%")#
+#
+# refit the additive model with the new reference category#
+add_model5 <- glm(#
+			choice ~ countries + sanctions ,#
+			data = data, family = binomial(link = "logit"))#
+summary(add_model5)#
+stargazer(add_model5)#
+#
+exp(coef(add_model5)["sanctions15%"])
+summary(mult_model)#
+stargazer(mult_model)
+mult_model <- glm(#
+			choice ~ countries * sanctions ,#
+			data = data, family = binomial(link = "logit"))#
+summary(mult_model)#
+stargazer(mult_model)
+1/(1 + exp(-0.0637))
+1/[1 + exp(-0.0637)]
