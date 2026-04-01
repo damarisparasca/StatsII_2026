@@ -1,0 +1,1494 @@
+# Title: Inclusion to Exclude: How Femonationalism Impacts Policy Preferences
+# Author: Sophie Mainz 
+# File: Software commands for the appendix
+# Note: change output="markdown" to "html" or "latex" for export
+
+# Start log 
+sink("log_appendix.txt", append = FALSE, split = TRUE)
+cat("========================================\n")
+cat("Appendix - Supporting Information - Replication Log\n")
+cat("Author: Sophie Mainz \n")
+cat("Started:", as.character(Sys.time()), "\n")
+cat("========================================\n\n")
+
+
+cat("Loading packages...\n")
+
+if (!require("pacman")) {
+  install.packages("pacman")
+  library(pacman)
+}
+p_load(tidyverse, modelsummary, marginaleffects, interflex, ggpubr)
+
+cat("Loading data...\n")
+
+set.seed(123)
+df <- read_csv("data.csv")
+
+cat("Data transformation.\n")
+
+df <- df %>% 
+  mutate(
+    treatment = as.factor(treatment),
+    imm_pro_con = as.factor(imm_pro_con),
+    gender = as.factor(gender),
+    gender_collapsed = as.factor(gender_collapsed),
+    party_collapsed = as.factor(party_collapsed),
+    born_us = as.factor(born_us),
+    imm_background = as.factor(imm_background),
+    race_collapsed = as.factor(race_collapsed),
+    residence_collapsed = as.factor(residence_collapsed),
+    unemployed = as.factor(unemployed),
+    party = as.factor(party),
+    cohort_labelled = as.factor(cohort_labelled),
+    parents_born = as.factor(parents_born),
+    continent_of_birth = as.factor(continent_of_birth),
+    merged_race = as.factor(merged_race)) 
+  
+
+df_pro <- subset(df, df$imm_pro_con==0)
+df_anti <- subset(df, df$imm_pro_con==2)
+df_treated <- subset(df, df$treatment!="control")
+
+
+
+
+
+# Summary statistics --
+
+cat("Producing Table A1.\n")
+# Table A1: Sample characteristics
+datasummary(gender + cohort_labelled + merged_race + continent_of_birth +
+              parents_born + residence_collapsed + as.factor(education) + 
+              employment_status + as.factor(household_income) 
+            ~ N + Percent(fn = function(x, y) 100 * length(x) / length(y)),
+            data = df, 
+            title = 'Sample characteristics (N = 3118)',
+            fmt = fmt_significant(digits = 1),
+            longtable = TRUE,
+            output="markdown")
+
+
+cat("Producing Table A2.\n")
+# Table A2: Summary statistics outcome variables - full sample
+datasummary(genderpolicies + geneq  + sexconsent + 
+              integration + integrlanguage + integrvalues ~ N + Mean + SD + Min + Max,
+            data = df, 
+            title = 'Summary statistics outcome variables (Full sample)',
+            output="markdown")
+
+cat("Producing Table A3.\n")
+# Table A3: Summary statistics outcome variables - anti-immigration respondents 
+datasummary(genderpolicies + geneq  + sexconsent + 
+              integration + integrlanguage + integrvalues ~ N + Mean + SD + Min + Max,
+            data = df_anti, 
+            title = 'Summary statistics outcome variables (Anti-immigration responsents)',
+            output="markdown")
+
+cat("Producing Table A4.\n")
+# Table A4: Summary statistics outcome variables - pro-immigration respondents 
+datasummary(genderpolicies + geneq  + sexconsent + 
+              integration + integrlanguage + integrvalues ~ N + Mean + SD + Min + Max,
+            data = df_pro, 
+            title = 'Summary statistics outcome variables (Pro-immigration respondents)',
+            output="markdown")
+
+cat("Producing Table A5.\n")
+# Table A5: Summary statistics categorical variables
+datasummary(imm_pro_con + gender_collapsed +
+              party_collapsed + born_us + imm_background + race_collapsed + 
+              residence_collapsed + unemployed +
+              1 ~ N + Percent(fn = function(x, y) 100 * length(x) / length(y)),
+            data = df,
+            title = 'Summary statistics categorical variables',
+            output="markdown")
+
+cat("Producing Table A6.\n")
+# Table A6: Summary statistics continuous variables 
+datasummary(immigration  + muslim + muslim1 +  muslim2 + latino + latino1_reversed 
+            + latino2  + pride_western_values + diversity 
+            + perceived_value_clash + placebo_corporate_tax 
+            ~ N + Mean + SD + Min + Max,
+            data = df, 
+            title = 'Summary statistics continous variables',
+            output="markdown")
+
+cat("Producing Table A7.\n")
+# Table A7: Randomization Check  
+df$imm_pro_con_chr <- as.character(df$imm_pro_con)
+datasummary(id + gender + imm_pro_con_chr + left_right_collapsed + party_collapsed ~ treatment, 
+            data = df, 
+            title = 'Randomization Check (N = 3118)',
+            fmt = fmt_significant(digits = 1),
+            output="markdown") 
+
+
+cat("Producing Table A8.\n")
+# Table A8: Manipulation Check - group association by treatment condition
+groups <- c(
+  "mc2_latinos", "mc2_muslims", "mc2_western_europeans", "mc2_africans",
+  "mc2_eastern_europeans", "mc2_me_na", "mc2_mexicans", "mc2_americans",
+  "mc2_woman", "mc2_asians", "mc2_whites", "mc2_blacks", "mc2_men")
+
+get_yes_count_by_treatment <- function(variable, label) {
+  df_treated %>%
+    filter(!!sym(variable) == "Y") %>%
+    count(treatment) %>% 
+    mutate(group = label) %>%
+    select(group, treatment, n)
+}
+
+result <- map_dfr(groups, ~ get_yes_count_by_treatment(.x, .x))
+
+result_df <- result %>%
+  pivot_wider(names_from = treatment, 
+              values_from = n, 
+              values_fill = 0) %>%
+  mutate(group = recode(group,
+                        "mc2_latinos" = "Latinos",
+                        "mc2_muslims" = "Muslims",
+                        "mc2_western_europeans" = "Western Europeans",
+                        "mc2_africans" = "Africans",
+                        "mc2_eastern_europeans" = "Eastern Europeans",
+                        "mc2_me_na" = "Middle Eastern/North Africans",
+                        "mc2_mexicans" = "Mexicans",
+                        "mc2_americans" = "Americans",
+                        "mc2_woman" = "Women",
+                        "mc2_asians" = "Asians",
+                        "mc2_whites" = "Whites",
+                        "mc2_blacks" = "Blacks",
+                        "mc2_men" = "Men")) %>%
+  mutate(Total = t1 + t2 + t3 + t4) %>%  
+  arrange(desc(Total))
+
+datasummary_df(result_df, 
+               title = "Manipulation check group associations by treatment condition", 
+               note = "Number of respondents who selected the named group when asked: While reading the interview with the politician, which of the following groups of people did you intuitively think about? Several answer options are possible. Counts shown by treatment condition.", 
+               fmt = function(x) sprintf("%.0f", x),
+               output = "markdown")
+
+rm(result, result_df, groups, get_yes_count_by_treatment)
+
+
+cat("Producing Table A9, upper part by treatment condition.\n")
+# Table A9: Manipulation check - party recollection 
+table(df$treatment, df$mc1_party, useNA = "ifany")
+df_treated$correctness <- with(df_treated, case_when(
+  treatment == "t1" & mc1_party == "Republican" ~ "correct",
+  treatment == "t2" & mc1_party == "Republican" ~ "correct",
+  treatment == "t3" & mc1_party == "Democratic" ~ "correct",
+  treatment == "t4" & mc1_party == "Democratic" ~ "correct",
+  TRUE ~ "incorrect"))
+
+## -- a) part 1 by treatment group
+datasummary(
+  treatment * correctness ~ N + Percent(),
+  data = df_treated,
+  fmt = "%.1f", # percentages with one decimal
+  title= "Manipulation check: recollection politician's party affiliation (N=2520)", 
+  note = "Factual manipulation check (FMC) testing  
+            respondents' recollection of the politician's party affiliation
+            in the vignette. Treated respondents were asked: 'Earlier, you 
+            read an excerpt from an interview with a prominent 
+            U.S. politician. Which party affiliation did the politician have?' 
+            Answer options were: Republican, Democratic, Independent, 
+            No party was mentioned, Other. The correct answer was 
+            'Republican' for treatment groups T1 and T2 and 'Democratic' 
+            for T3 and T4. (N=2520).",
+  output="markdown")
+
+## -- b) part 2 for all treated respondents 
+cat("Producing Table A9, lower part for the full sample.\n")
+datasummary(correctness ~ N + Percent(),
+            data = df_treated,
+            fmt = "%.1f",
+            output = "markdown")
+
+rm(correct_answers_mc1)
+
+
+
+# Table A10: Manipulation check - topic recollection 
+cat("Producing Table A10, upper part by treatment condition.\n")
+
+table(df$treatment, df$mc3_threat, useNA = "ifany")
+
+df_treated$correctness_mc3 <- with(df_treated, case_when(
+  treatment == "t1" & mc3_threat == 1 ~ "correct",
+  treatment == "t2" & mc3_threat == 2 ~ "correct",
+  treatment == "t3" & mc3_threat == 1 ~ "correct",
+  treatment == "t4" & mc3_threat == 2 ~ "correct",
+  TRUE ~ "incorrect"))
+
+## -- a) part 1 by treatment group
+datasummary(
+  treatment * correctness_mc3 ~ N + Percent(),
+  data = df_treated,
+  fmt = "%.1f",
+  title= "Manipulation check: recollection the threat description (N=2520).",
+  notes = "Factual manipulation check (FMC) testing  
+            respondents' recollection of the threat desription 
+            in the vignette. Treated respondents were asked: In the interview
+            text that you read earlier, what was described as being under 
+            threat?
+            Answer options were: Gender equality, Women's safety, 
+            American employment, The environment, Free speech, Other. 
+            The correct answer was 
+            'Gender equality' for treatment groups T1 and T3 and ' Women's safety' 
+            for T2 and T4. (N=2520).",
+  output = "markdown")
+
+## -- b) part 2 for all treated respondents 
+cat("Producing Table A10, lower part for the full sample.\n")
+datasummary(correctness_mc3 ~ N + Percent(),
+            data = df_treated,
+            fmt = "%.1f",
+            output = "markdown")
+
+rm(correct_answers_mc3,df_treatment)
+
+
+# Figure: Histograms for the two outcome variables by immigrant attitude groups 
+cat("Producing Figure A1.\n")
+
+df_pro <- subset(df, df$imm_pro_con==0) 
+df_anti <- subset(df, df$imm_pro_con==2)
+
+# Gender policies - Pro-immigration respondents
+hist_gender_pro <- ggplot(df_pro, aes(x = genderpolicies)) +
+  geom_histogram(binwidth = 0.5, fill = "#8e99fa", alpha = 0.7, color = "white", size = 0.3) +
+  geom_vline(xintercept = mean(df_pro$genderpolicies, na.rm = TRUE), 
+             color = "grey60", linetype = "dotted", size = 0.8) +
+  scale_x_continuous(breaks = seq(0, 10, 2), limits = c(0, 10)) +
+  scale_y_continuous(limits = c(0, 200)) +
+  labs(x = "Support for gender policies", 
+       y = "Frequency",
+       title = "Gender Policies: Pro-Immigration",
+       subtitle = paste0("N = ", nrow(df_pro))) +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 10, face = "bold"),
+        plot.subtitle = element_text(size = 9),
+        axis.title = element_text(size = 9),
+        axis.text = element_text(size = 8))
+
+# Gender policies - Anti-immigration respondents
+hist_gender_anti <- ggplot(df_anti, aes(x = genderpolicies)) +
+  geom_histogram(binwidth = 0.5, fill = "#0818A8", alpha = 0.7, color = "white", size = 0.3) +
+  geom_vline(xintercept = mean(df_anti$genderpolicies, na.rm = TRUE), 
+             color = "grey60", linetype = "dotted", size = 0.8) +
+  scale_x_continuous(breaks = seq(0, 10, 2), limits = c(0, 10)) +
+  scale_y_continuous(limits = c(0, 200)) +
+  labs(x = "Support for gender policies", 
+       y = "Frequency",
+       title = "Gender Policies: Anti-Immigration",
+       subtitle = paste0("N = ", nrow(df_anti))) +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 10, face = "bold"),
+        plot.subtitle = element_text(size = 9),
+        axis.title = element_text(size = 9),
+        axis.text = element_text(size = 8))
+
+# Integration policies - Pro-immigration respondents
+hist_integration_pro <- ggplot(df_pro, aes(x = integration)) +
+  geom_histogram(binwidth = 0.5, fill = "#8e99fa", alpha = 0.7, color = "white", size = 0.3) +
+  geom_vline(xintercept = mean(df_pro$integration, na.rm = TRUE), 
+             color = "grey60", linetype = "dotted", size = 0.8) +
+  scale_x_continuous(breaks = seq(0, 10, 2), limits = c(0, 10)) +
+  scale_y_continuous(limits = c(0, 200)) +
+  labs(x = "Support for integration policies", 
+       y = "Frequency",
+       title = "Integration Policies: Pro-Immigration",
+       subtitle = paste0("N = ", nrow(df_pro))) +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 10, face = "bold"),
+        plot.subtitle = element_text(size = 9),
+        axis.title = element_text(size = 9),
+        axis.text = element_text(size = 8))
+
+# Integration policies - Anti-immigration respondents
+hist_integration_anti <- ggplot(df_anti, aes(x = integration)) +
+  geom_histogram(binwidth = 0.5, fill = "#0818A8", alpha = 0.7, color = "white", size = 0.3) +
+  geom_vline(xintercept = mean(df_anti$integration, na.rm = TRUE), 
+             color = "grey60", linetype = "dotted", size = 0.8) +
+  scale_x_continuous(breaks = seq(0, 10, 2), limits = c(0, 10)) +
+  scale_y_continuous(limits = c(0, 200)) +
+  labs(x = "Support for integration policies", 
+       y = "Frequency",
+       title = "Integration Policies: Anti-Immigration",
+       subtitle = paste0("N = ", nrow(df_anti))) +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 10, face = "bold"),
+        plot.subtitle = element_text(size = 9),
+        axis.title = element_text(size = 9),
+        axis.text = element_text(size = 8))
+
+label_anti <- ggplot() +
+  annotate("rect", xmin = 0, xmax = 1, ymin = 0, ymax = 1, fill = "grey85", alpha = 0.8) +
+  annotate("text", x = 0.5, y = 0.5, label = "Anti-Immigration\nRespondents", 
+           angle = 90, hjust = 0.5, vjust = 0.5, size = 3.5, fontface = "bold") +
+  theme_void() +
+  theme(plot.margin = margin(0, 0, 0, 0))
+
+label_pro <- ggplot() +
+  annotate("rect", xmin = 0, xmax = 1, ymin = 0, ymax = 1, fill = "grey85", alpha = 0.8) +
+  annotate("text", x = 0.5, y = 0.5, label = "Pro-Immigration\nRespondents", 
+           angle = 90, hjust = 0.5, vjust = 0.5, size = 3.5, fontface = "bold") +
+  theme_void() +
+  theme(plot.margin = margin(0, 0, 0, 0))
+
+combined_subgroup_hist <- wrap_plots(
+  label_anti, hist_gender_anti, hist_integration_anti,
+  label_pro, hist_gender_pro, hist_integration_pro,
+  ncol = 3, nrow = 2,
+  widths = c(0.12, 1, 1), 
+  heights = c(1, 1)
+) +
+  plot_annotation(
+    title = "Distribution of Outcome Variables by Immigration Attitudes",
+    subtitle = "Comparison of Gender and Integration Policy Support",
+    theme = theme(plot.title = element_text(size = 12, face = "bold"),
+                  plot.subtitle = element_text(size = 10))
+  )
+
+combined_subgroup_hist
+ggsave("figures/subgroup_outcome_histograms.png", dpi = 1000, width = 12, height = 8)
+
+
+# Regressions --
+
+cat("Producing Table A11.\n")
+# Table A11: Regression outcome: gender education policies 
+# Additional robustness test: include covariate party_collapsed_num
+models <- list()
+models [['Base']] <-lm (genderpolicies ~ treatment, data=df)
+models [['Interaction model']] <-lm (genderpolicies ~ treatment*immigration, data=df)
+models [['Interaction with covariates']] <-lm (genderpolicies ~ treatment*immigration + gender_collapsed + born_us + 
+                                                 imm_background + race_collapsed + cohort_num + 
+                                                 residence_collapsed + education + 
+                                                 unemployed + household_income, data=df)
+models [['Pro-immigration respondents']] <-lm (genderpolicies ~ treatment, data=df_pro)
+models [['Anti-immigration respondents']] <-lm (genderpolicies ~ treatment, data=df_anti)
+models [['Pro-immigration respondents with covariates']] <-lm (genderpolicies ~ treatment + gender_collapsed + born_us + 
+                                                                 imm_background + race_collapsed + cohort_num + 
+                                                                 residence_collapsed + education  + 
+                                                                 unemployed + household_income, data=df_pro)
+models [['Anti-immigration respondents with covariates']] <-lm (genderpolicies ~ treatment + gender_collapsed + born_us + 
+                                                                  imm_background + race_collapsed + cohort_num + 
+                                                                  residence_collapsed + education + 
+                                                                  unemployed + household_income, data=df_anti)
+modelsummary(models, 
+             title = "Regression analysis: Gender policices",
+             star=c('*'=.1, "**"=.05, "***"=.01), output="markdown") # set to output = "latex" for export
+
+# Table A12: Regression outcome: strict integration policies 
+# Additional robustness test: include covariate party_collapsed_num
+cat("Producing Table A12.\n")
+models <- list()
+models [['Base']] <-lm (integration ~ treatment, data=df)
+models [['Interaction model']] <-lm (integration ~ treatment*immigration, data=df)
+models [['Interaction with covariates']] <-lm (integration ~ treatment*immigration + gender_collapsed + born_us + 
+                                                 imm_background + race_collapsed + cohort_num + 
+                                                 residence_collapsed + education + 
+                                                 unemployed + household_income, data=df)
+models [['Pro-immigration respondents']] <-lm (integration ~ treatment, data=df_pro)
+models [['Anti-immigration respondents']] <-lm (integration ~ treatment, data=df_anti)
+models [['Pro-immigration respondents with covariates']] <-lm (integration ~ treatment + gender_collapsed + born_us + 
+                                                                 imm_background + race_collapsed + cohort_num + 
+                                                                 residence_collapsed + education  + 
+                                                                 unemployed + household_income, data=df_pro)
+models [['Anti-immigration respondents with covariates']] <-lm (integration ~ treatment + gender_collapsed + born_us + 
+                                                                  imm_background + race_collapsed + cohort_num + 
+                                                                  residence_collapsed + education + 
+                                                                  unemployed + household_income, data=df_anti)
+
+modelsummary(models, star=c('*'=.1, "**"=.05, "***"=.01), 
+             title = 'Regressions: Support for assimilationist integration policies',
+             output="markdown")
+
+
+# Table A13: Regression outcome: attitudes towards Latinos and Muslims (explorative analysis)
+cat("Producing Table A13.\n")
+models <- list()
+models [['Base L']] <-lm (latino ~ treatment, data=df)
+models [['Interaction model L']] <-lm (latino ~ treatment*immigration, data=df)
+models [['Interaction with covariates L']] <-lm (latino ~ treatment*immigration + gender_collapsed + born_us + 
+                                                   imm_background + race_collapsed + cohort_num + 
+                                                   residence_collapsed + education +
+                                                   unemployed + household_income, data=df)
+models [['Base M']] <-lm (muslim ~ treatment, data=df)
+models [['Interaction model M']] <-lm (muslim ~ treatment*immigration, data=df)
+models [['Interaction with covariates M']] <-lm (muslim ~ treatment*immigration + gender_collapsed + born_us + 
+                                                   imm_background + race_collapsed + cohort_num + 
+                                                   residence_collapsed + education +
+                                                   unemployed + household_income, data=df)
+modelsummary(models, 
+             title = "Regression analysis explorative outcomes: attitudes towards Latinos & Muslims",
+             star=c('*'=.1, "**"=.05, "***"=.01), output="markdown")
+
+
+# Table A14: Regression outcome: placebo (corporate tax policy)
+# Additional robustness check: adding party_collapsed_num
+cat("Producing Table A14.\n")
+models <- list()
+models [['Base']] <-lm (placebo_corporate_tax ~ treatment, data=df)
+models [['Interaction model']] <-lm (placebo_corporate_tax ~ treatment*immigration, data=df)
+models [['Covariate interaction']] <-lm (placebo_corporate_tax ~ treatment*immigration + gender_collapsed + born_us + 
+                                           imm_background + race_collapsed + cohort_num + 
+                                           residence_collapsed + education +
+                                           unemployed + household_income, data=df)
+models [['Pro-immigration']] <-lm (placebo_corporate_tax ~ treatment, data=df_pro)
+models [['Anti-immigration']] <-lm (placebo_corporate_tax ~ treatment, data=df_anti)
+models [['Pro-immigration respondents with covariates']] <-lm (placebo_corporate_tax ~ treatment + gender_collapsed + born_us + 
+                                                                 imm_background + race_collapsed + cohort_num + 
+                                                                 residence_collapsed + education +
+                                                                 unemployed + household_income, data=df_pro)
+models [['Anti-immigration respondents with covariates']] <-lm (placebo_corporate_tax ~ treatment + gender_collapsed + born_us + 
+                                                                  imm_background + race_collapsed + cohort_num + 
+                                                                  residence_collapsed + education +
+                                                                  unemployed + household_income, data=df_anti)
+
+modelsummary(models, 
+             title = "Regression analysis: placebo (corporate tax policy)",
+             star=c('*'=.1, "**"=.05, "***"=.01), output="markdown") 
+rm(models)
+
+
+
+
+
+# Differences in means --
+cat("Defining groups.\n")
+pro_migr <- data.frame(immigration = 51:100)
+anti_migr <- data.frame(immigration = 1:49)
+
+
+
+# Table A15: Differences in means - outcome: gender policies --
+cat("Producing Table A15, part 1 anti-immigration respondents (upper part).\n")
+m <- lm(genderpolicies ~ treatment * immigration, data = df)
+
+## -- a) anti-immigration respondents
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), newdata = anti_migr)
+# Note: Set vector to the rows comparing t - control (check position if necessary)
+comp <- comp[c(1,2,4,7), c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title = "Differences in means for anti-immigration respondents, outcome: gender education policy support", 
+               fmt = 3,
+               output="markdown") 
+
+## -- b) pro-immigration respondents
+cat("Producing Table A15, part 2 pro-immigration respondents (lower part).\n")
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), newdata = pro_migr)
+
+comp <- comp[c(1,2,4,7), c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title = "Differences in means for pro-immigration respondents, outcome: gender education policy support", 
+               fmt = 3,
+               notes = "Differences in means represent the 
+               CATE of femonationalist speech on 
+               support for stricter integration policies (0-10) 
+               between treatments and control among anti-immigration 
+               respondents (top) and pro-immigration respondents (bottom).
+               Estimates are based on on Table A11 Model 2 
+               (interaction model with full sample). 
+               The results remain robust when covariates are included 
+               (Table A11 Model 3). Confidence interval at 95%. 
+               * $p<0.1$, ** $p<0.05$, *** $p<0.01$",
+               output="markdown")
+
+
+
+## -- Replication of Table A15 including covariates (not reported in Appendix)
+cat("Producing a replication of Table A15 with covariates (not reported in Appendix).\n")
+
+m <- lm (genderpolicies ~ treatment*immigration + gender_collapsed + born_us + 
+           imm_background + race_collapsed + cohort_num + 
+           residence_collapsed + education + party_collapsed_num +
+           unemployed + household_income, data=df)
+
+## -- a) anti-immigration respondents
+comp <- avg_comparisons(m, newdata = datagrid("immigration"=1:49, "treatment"=c("control", "t1")))
+# Note: Set vector to the rows comparing t - control (check posotion if necessary)
+comp <- comp[c(11,12,13,14), c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Comparing difference in treatment effects between treatment groups including covariates, outcome: gender policies, anti-immigration respondents", 
+               fmt = 3,
+               output="markdown")
+
+## -- b) pro-immigration respondents
+comp <- avg_comparisons(m, newdata = datagrid("immigration"=51:100, "treatment"=c("control", "t1")))
+comp <- comp[c(11,12,13,14), c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Comparing difference in treatment effects between treatment groups including covariates, outcome: gender policies, pro-immigration respondents", 
+               fmt = 3,
+               output="markdown")
+
+
+
+# Table A16: Differences in means - outcome: integration policies --
+cat("Producing Table A16, part 1 anti-immigration respondents (upper part).\n")
+
+m <- lm(integration ~ treatment * immigration, data = df)
+
+## -- a) anti-immigration respondents
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), newdata = anti_migr)
+comp <- comp[c(1,2,4,7), c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Differences in means for anti-immigration respondents, outcome: support for assimilationst integration policies", 
+               fmt = 3,
+               output="markdown")
+
+## -- b) pro-immigration respondents
+cat("Producing Table A16, part 2 pro-immigration respondents (lower part).\n")
+
+m <- lm(integration ~ treatment * immigration, data = df)
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), newdata = pro_migr)
+comp <- comp[c(1,2,4,7), c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Differences in means for pro-immigration respondents, <br> 
+               outcome: support for assimilationst integration policies", 
+               fmt = 3,
+               notes = "Note: Differences in means represent the 
+               CATE of femonationalist speech on support for stricter integration policies 
+               (0-10) between treatments and control among anti-immigration 
+               respondents (top) and pro-immigration respondents (bottom).
+               Estimates are based on Table A12 Model 2
+               (interaction model with full sample). 
+               The results remain robust when covariates are included 
+               (Table A12 Model 3).
+               Confidence interval at 95%. 
+               * $p<0.1$, ** $p<0.05$, *** $p<0.01$",
+               output="markdown")
+
+
+
+## -- Replication of Table A16 including covariates (not reported in Appendix)
+cat("Producing a replication of Table A16 with covariates (not reported in Appendix).\n")
+
+m <- lm (integration ~ treatment*immigration + gender_collapsed + born_us + 
+           imm_background + race_collapsed + cohort_num + 
+           residence_collapsed + education + party_collapsed_num +
+           unemployed + household_income, data=df)
+
+## -- a) anti-immigration respondents
+comp <- avg_comparisons(m, newdata = datagrid("immigration"=1:49, "treatment"=c("control", "t1")))
+comp
+# Note: Set vector to the rows comparing t - control (check their psotion if necessary)
+comp <- comp[c(11,12,13,14), c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Comparing difference in treatment effects between treatment groups including covariates, outcome: integration policies, anti-immigration respondents", 
+               fmt = 3,
+               output="markdown")
+
+## -- b) pro-immigration respondents
+comp <- avg_comparisons(m, newdata = datagrid("immigration"=51:100, "treatment"=c("control", "t1")))
+comp <- comp[c(11,12,13,14), c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Comparing difference in treatment effects between treatment groups including covariates, outcome: integration policies, pro-immigration respondents", 
+               fmt = 3,
+               output="markdown")
+
+
+
+# Table A17: Differences in means by gender - outcome: gender policies --
+cat("Producing Table A17 in 4 parts.\n")
+
+m <- lm (genderpolicies ~ treatment*immigration*gender_collapsed, data=df)
+
+## -- a) anti-immigration women and other
+cat("Table A17, Part 1: anti-immigration respondents, women and other genders.\n")
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), 
+                        newdata = datagrid("immigration"=1:49, 
+                                           "gender_collapsed"="Other", 
+                                           "treatment"=c("control", "t1")))
+comp <- comp[c(1,2,4,7) , c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Differences in means by gender Outcome: Support for gender education policies", 
+               fmt = 3,
+               output="markdown")
+# Note: gender_collapsed="Male" for respondents who identify as men and 
+#       gender_collapsed"="Other" for women and other genders
+
+
+## -- b)  anti-immigration men
+cat("Table A17, Part 2: anti-immigration respondents, men.\n")
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), 
+                        newdata = datagrid("immigration"=1:49, 
+                                           "gender_collapsed"="Male", 
+                                           "treatment"=c("control", "t1")))
+comp <- comp[c(1,2,4,7) , c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Differences in means by gender Outcome: Support for gender education policies", 
+               fmt = 3,
+               output="markdown")
+
+## -- c) pro-immigration women and other
+cat("Table A17, Part 3: pro-immigration respondents, women and other genders.\n")
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), 
+                        newdata = datagrid("immigration"=51:100, 
+                                           "gender_collapsed"="Other", 
+                                           "treatment"=c("control", "t1")))
+comp <- comp[c(1,2,4,7) , c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Differences in means by gender Outcome: Support for gender education policies", 
+               fmt = 3,
+               output="markdown")
+
+
+## -- d) pro-immigration men
+cat("Table A17, Part 4: pro-immigration respondents, men.\n")
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), 
+                        newdata = datagrid("immigration"=51:100, 
+                                           "gender_collapsed"="Male", 
+                                           "treatment"=c("control", "t1")))
+comp <- comp[c(1,2,4,7) , c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Differences in means by gender Outcome: Support for gender education policies", 
+               fmt = 3,
+               notes = "Note: Differences in means represent the CATE of 
+               femonationalist speech on support for gender education policies 
+               (0-10) between treatments and control among anti-immigration 
+               respondents (top) and pro-immigration respondents (bottom) 
+               stratified by gender. Estimates are based on a triple
+               interaction model (treatment*immigration attitudes*gender) 
+               with the full sample. 
+               Confidence interval at 95%. * $p<0.1$, ** $p<0.05$, *** $p<0.01$",
+               output="markdown")
+
+
+
+# Table A18: Differences in means by gender - outcome: integration policies -- 
+cat("Producing Table A18 in 4 parts.\n")
+m <- lm (integration ~ treatment*immigration*gender_collapsed, data=df)
+
+## -- a) anti-immigration women and other
+cat("Table A18, Part 1: anti-immigration respondents, women and other genders.\n")
+
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), 
+                        newdata = datagrid("immigration"=1:49, 
+                                           "gender_collapsed"="Other", 
+                                           "treatment"=c("control", "t1")))
+comp <- comp[c(1,2,4,7) , c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Differences in means by gender Outcome: Support for strict integration policies", 
+               fmt = 3,
+               output="markdown")
+
+
+## -- b)  anti-immigration men
+cat("Table A18, Part 2: anti-immigration respondents, men.\n")
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), 
+                        newdata = datagrid("immigration"=1:49, 
+                                           "gender_collapsed"="Male", 
+                                           "treatment"=c("control", "t1")))
+comp <- comp[c(1,2,4,7) , c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Differences in means by gender Outcome: Support for gender education policies", 
+               fmt = 3,
+               output="markdown")
+
+## -- c) pro-immigration women and other
+cat("Table A18, Part 3: pro-immigration respondents, women and other genders.\n")
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), 
+                        newdata = datagrid("immigration"=51:100, 
+                                           "gender_collapsed"="Other", 
+                                           "treatment"=c("control", "t1")))
+comp <- comp[c(1,2,4,7) , c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Differences in means by gender Outcome: Support for gender education policies", 
+               fmt = 3,
+               output="markdown")
+
+
+## -- d) pro-immigration men
+cat("Table A18, Part 4: pro-immigration respondents, men.\n")
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), 
+                        newdata = datagrid("immigration"=51:100, 
+                                           "gender_collapsed"="Male", 
+                                           "treatment"=c("control", "t1")))
+comp <- comp[c(1,2,4,7) , c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Differences in means by gender Outcome: Support for gender education policies", 
+               fmt = 3,
+               notes = "Note: Differences in means represent the CATE of 
+               femonationalist speech on support for strict integration policies
+               (0-10) between treatments and control among anti-immigration 
+               respondents (top) and pro-immigration respondents (bottom) 
+               stratified by gender. Estimates are based on a triple
+               interaction model (treatment*immigration attitudes*gender) 
+               with the full sample. 
+               Confidence interval at 95%. * $p<0.1$, ** $p<0.05$, *** $p<0.01$",
+               output="markdown")
+
+
+
+# Table A19: Differences in means  - outcome: attitudes towards Latinos & Muslims --
+cat("Producing Table A19 in 4 parts.\n")
+
+## -- Outcome: attitudes towards Latinos 
+m <- lm(latino ~ treatment * immigration, data = df)
+
+## -- a) anti-immigration respondents 
+cat("Table A19, Part 1: attitudes towards latinos, anti-immigration respondents.\n")
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), newdata = anti_migr)
+comp <- comp[ , c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+comp <- comp[c(1,2,4,7) , c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Differences in means for anti-immigration respondents, outcome: support for assimilationst integration policies", 
+               fmt = 3,
+               output="markdown")
+
+## -- b) pro-immigration respondents
+cat("Table A19, Part 2: attitudes towards latinos, pro-immigration respondents.\n")
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), newdata = pro_migr)
+comp <- comp[ , c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+comp <- comp[c(1,2,4,7) , c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Differences in means for pro-immigration respondents, <br> 
+               outcome: support for assimilationst integration policies", 
+               fmt = 3,
+               output="markdown")
+
+cat("Table A19, Part 3: attitudes towards muslims, anti-immigration respondents.\n")
+## -- Outcome: attitudes towards Muslims 
+m <- lm(muslim ~ treatment * immigration, data = df)
+
+## -- a) anti-immigration respondents 
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), newdata = anti_migr)
+comp <- comp[ , c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+comp <- comp[c(1,2,4,7) , c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Differences in means for anti-immigration respondents, outcome: support for assimilationst integration policies", 
+               fmt = 3,
+               output="markdown")
+
+## -- b) pro-immigration respondents
+cat("Table A19, Part 4: attitudes towards muslims, pro-immigration respondents.\n")
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), newdata = pro_migr)
+comp <- comp[ , c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+comp <- comp[c(1,2,4,7) , c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title =  "Differences in means for pro-immigration respondents,
+               outcome: support for assimilationst integration policies", 
+               fmt = 3,
+               notes = "Note: Differences in means represent the 
+               CATE of femonationalist speech on attitudes towards Latinos 
+               (1-5; top) and attitudes towards Muslims (1-5; bottom)
+               between treatments and control among 
+               a) anti- and b) pro-immigration respondents. 
+               Estimates are based on Table A13 Model 2 and 5 
+               (interaction model with 
+               full sample).
+               Confidence interval at 95%. 
+               * $p<0.1$, ** $p<0.05$, *** $p<0.01$",
+               output="markdown")
+
+
+
+# Table A20: Differences in means - placebo outcome: corporate tax policy -- 
+cat("Producing Table A20 in 2 parts.\n")
+m <- lm( placebo_corporate_tax  ~ treatment * immigration, data = df)
+
+## -- a) anti-immigration respondents
+cat("Table A20, Part 1: anti-immigration respondents.\n")
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), newdata = anti_migr)
+comp <- comp[c(1,2,4,7), c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title = "Differences in means for anti-immigration respondents, outcome: corporate tax policy support (placebo)", 
+               fmt = 3,
+               output="markdown") 
+
+## -- b) pro-immigration respondents
+cat("Table A20, Part 2: pro-immigration respondents.\n")
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), newdata = pro_migr)
+comp <- comp[c(1,2,4,7), c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title = "Differences in means for pro-immigration respondents, outcome: corporate tax policy support (placebo)", 
+               fmt = 3,
+               notes = "Note: Differences in means represent the CATE of 
+               femonationalist speech on corporate tax policy support (placebo outcome; 0-10) 
+               between treatments and control among anti-immigration respondents 
+               (top) and pro-immigration respondents (bottom). Estimates are based on
+               Table A14 Model 2 (interaction model with full sample). 
+               Confidence intervalat 95%. * $p<0.1$, ** $p<0.05$, *** $p<0.01$",
+               output="markdown")
+
+
+
+
+
+# Robustness Tests -- 
+cat("Replicating the main analysis with party-affiliation instead of prior immigration attitudes, results reported in the written text not in the Appendix.\n")
+
+## -- Robustness test 1: 
+## Analysis of the main hypotheses using party affiliation (Rep / Dem) as the 
+## conditional variable instead of prior immigration attitudes 
+## Note: The tables for this robustness check are not shown in the Appendix but 
+## can be replicated here. 
+
+df_dem <- subset(df, df$party_collapsed_num == 1)
+df_rep <- subset(df, df$party_collapsed_num == 3)
+
+
+## -- Regression, outcome: gender policies 
+models <- list()
+models [['Base']] <-lm (genderpolicies ~ treatment, data=df)
+models [['Interaction model']] <-lm (genderpolicies ~ treatment*party_collapsed_num, data=df)
+models [['Interaction with covariates']] <-lm (genderpolicies ~ treatment*party_collapsed_num + gender_collapsed + born_us + 
+                                                 imm_background + race_collapsed + cohort_num + 
+                                                 residence_collapsed + education +
+                                                 unemployed + household_income, data=df)
+models [['Democratic respondents']] <-lm (genderpolicies ~ treatment, data=df_dem)
+models [['Republican respondents']] <-lm (genderpolicies ~ treatment, data=df_rep)
+models [['Democratic respondents with covariates']] <-lm (genderpolicies ~ treatment + gender_collapsed + born_us + 
+                                                            imm_background + race_collapsed + cohort_num + 
+                                                            residence_collapsed + education +
+                                                            unemployed + household_income, data=df_dem)
+models [['Republican respondents with covariates']] <-lm (genderpolicies ~ treatment + gender_collapsed + born_us + 
+                                                            imm_background + race_collapsed + cohort_num + 
+                                                            residence_collapsed + education + 
+                                                            unemployed + household_income, data=df_rep)
+modelsummary(models, 
+             title = "Regression analysis: Gender policices",
+             star=c('*'=.1, "**"=.05, "***"=.01), output="markdown")
+
+
+
+## -- Differences in means, outcome: gender policies 
+dem <- data.frame(party_collapsed_num = 1)
+rep <- data.frame(party_collapsed_num = 3)
+
+m <- lm(genderpolicies ~ treatment * party_collapsed_num, data = df)
+
+## -- a) Republican respondents
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), newdata = rep)
+comp <- comp[c(1, 2, 4, 7), c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title = "Differences in means for Republican respondents, outcome: gender education policy support", 
+               fmt = 3,
+               notes = "Note: Differences in means represent the 
+               differential effect of femonationalist speech on 
+               gender education policy support (0-10) between 
+               treatments and control among Republican respondents. 
+               Estimates are based on the interaction model with 
+               the full sample.  
+               Confidence interval at 95%.
+               * $p<0.1$, ** $p<0.05$, *** $p<0.01$",
+               output="markdown") 
+
+## -- b) Democratic respondents
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), newdata = dem)
+comp <- comp[c(1, 2, 4, 7), c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title = "Differences in means for Republican respondents, outcome: gender education policy support", 
+               fmt = 3,
+               notes = "Note: Differences in means represent the 
+               differential effect of femonationalist speech on 
+               gender education policy support (0-10) between 
+               treatments and control among Democratic respondents. 
+               Estimates are based on the interaction model with 
+               the full sample.  
+               Confidence interval at 95%.
+               * $p<0.1$, ** $p<0.05$, *** $p<0.01$",
+               output="markdown") 
+
+
+
+## -- Regression, outcome: integration policies 
+models <- list()
+models [['Base']] <-lm (integration ~ treatment, data=df)
+models [['Interaction model']] <-lm (integration ~ treatment*party_collapsed_num, data=df)
+models [['Interaction with covariates']] <-lm (integration ~ treatment*party_collapsed_num + gender_collapsed + born_us + 
+                                                 imm_background + race_collapsed + cohort_num + 
+                                                 residence_collapsed + education +
+                                                 unemployed + household_income, data=df)
+models [['Democratic respondents']] <-lm (integration ~ treatment, data=df_dem)
+models [['Republican respondents']] <-lm (integration ~ treatment, data=df_rep)
+models [['Democratic respondents with covariates']] <-lm (integration ~ treatment + gender_collapsed + born_us + 
+                                                            imm_background + race_collapsed + cohort_num + 
+                                                            residence_collapsed + education +
+                                                            unemployed + household_income, data=df_dem)
+models [['Republican respondents with covariates']] <-lm (integration ~ treatment + gender_collapsed + born_us + 
+                                                            imm_background + race_collapsed + cohort_num + 
+                                                            residence_collapsed + education +
+                                                            unemployed + household_income, data=df_rep)
+
+modelsummary(models, star=c('*'=.1, "**"=.05, "***"=.01), 
+             title = 'Regressions: Support for assimilationist integration policies',
+             output="markdown")
+
+
+
+## -- Differences in means, outcome: integration policies 
+m <- lm(integration ~ treatment * party_collapsed_num, data = df)
+
+## -- a) Republican respondents
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), newdata = rep)
+comp <- comp[c(1, 2, 4, 7), c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title = "Differences in means for Democratic respondents, outcome: gender education policy support", 
+               fmt = 3,
+               notes = "Note: Differences in means represent the 
+               differential effect of femonationalist speech on 
+               gender education policy support (0-10) between 
+               treatments and control among Republican respondents. 
+               Estimates are based on the interaction model with 
+               the full sample.  
+               Confidence interval at 95%.
+               * $p<0.1$, ** $p<0.05$, *** $p<0.01$",
+               output="markdown") 
+
+## -- b) Democratic respondents
+comp <- avg_comparisons(m, variables = list(treatment = "pairwise"), newdata = dem)
+comp <- comp[c(1, 2, 4, 7), c("contrast", "estimate", "std.error", "p.value", "conf.low", "conf.high")]
+datasummary_df(comp, 
+               title = "Differences in means for Democratic respondents, outcome: gender education policy support", 
+               fmt = 3,
+               notes = "Note: Differences in means represent the 
+               differential effect of femonationalist speech on 
+               gender education policy support (0-10) between 
+               treatments and control among Democratic respondents. 
+               Estimates are based on the interaction model with 
+               the full sample.  
+               Confidence interval at 95%.
+               * $p<0.1$, ** $p<0.05$, *** $p<0.01$",
+               output="markdown") 
+
+## -- Additional exploration of the relationship between partisanship and 
+##    immigration attitudes 
+summary_table <- df %>%
+  mutate(immigration_stance = case_when(
+    immigration < 50 ~ "Against",
+    immigration == 50 ~ "Indifferent",
+    immigration > 50 ~ "Pro"
+  )) %>%
+  filter(party_collapsed_num %in% c(1, 2, 3)) %>%  # Filter for Democrats, Independents, and Republicans
+  group_by(immigration_stance, party_collapsed_num) %>%
+  summarise(count = n()) %>%
+  pivot_wider(names_from = party_collapsed_num, values_from = count, values_fill = list(count = 0))
+colnames(summary_table) <- c("Immigration Stance", "Democrats", "Independents", "Republicans")
+summary_table
+
+
+cat("Producing Figure A2.\n")
+## -- Robustness test 2:
+## Checking the linearity assumption 
+## Based on: https://doi.org/10.1017/pan.2018.46 
+## Code: https://yiqingxu.org/packages/interflex/RGuide.html  
+## Note: The comparisons relevant for H1 and H2 are reported in the Appendix, 
+##       those and all other comparisons can also be generated with the following code
+
+## -- -- a) raw plots, outcome: gender policies, treatment: t1 (in Appendix)
+df_minimal <- data.frame(
+  genderpolicies = as.numeric(df$genderpolicies[df$treatment %in% c("control", "t1")]),
+  treatment = as.numeric(ifelse(df$treatment[df$treatment %in% c("control", "t1")] == "control", 0, 1)),
+  immigration = as.numeric(df$immigration[df$treatment %in% c("control", "t1")])
+)
+
+gender_t1 <- interflex(estimator = "raw",
+          Y = "genderpolicies", 
+          D = "treatment", 
+          X = "immigration", 
+          data = df_minimal,
+          weights = NULL, 
+          Ylabel = "gender policies", 
+          Dlabel = "Treatment", 
+          Xlabel="immigration att.", 
+          main = "gender policies, t1", 
+          cex.main = .8, 
+          ncols=2,
+          cex.axis = 0.8, cex.lab = 0.8)
+gender_t1
+
+## -- -- b) raw plots, outcome: gender policies, treatment: t2 (in Appendix)
+df_minimal <- data.frame(
+  genderpolicies = as.numeric(df$genderpolicies[df$treatment %in% c("control", "t2")]),
+  treatment = as.numeric(ifelse(df$treatment[df$treatment %in% c("control", "t2")] == "control", 0, 1)),
+  immigration = as.numeric(df$immigration[df$treatment %in% c("control", "t2")])
+)
+
+gender_t2 <- interflex(estimator = "raw",
+          Y = "genderpolicies", 
+          D = "treatment", 
+          X = "immigration", 
+          data = df_minimal, 
+          weights = NULL, 
+          Ylabel = "gender policies", 
+          Dlabel = "Treatment", 
+          Xlabel="immigration att.", 
+          main = "gender policies, t2", 
+          cex.main = .8, 
+          ncols=2,
+          cex.axis = 0.8, cex.lab = 0.8)
+gender_t2
+
+## -- -- c) raw plots, outcome: gender policies, treatment: t3 (not in Appendix)
+df_minimal <- data.frame(
+  genderpolicies = as.numeric(df$genderpolicies[df$treatment %in% c("control", "t3")]),
+  treatment = as.numeric(ifelse(df$treatment[df$treatment %in% c("control", "t3")] == "control", 0, 1)),
+  immigration = as.numeric(df$immigration[df$treatment %in% c("control", "t3")])
+)
+
+interflex(estimator = "raw",
+                       Y = "genderpolicies", 
+                       D = "treatment", 
+                       X = "immigration", 
+                       data = df_minimal, 
+                       weights = NULL, 
+                       Ylabel = "gender policies", 
+                       Dlabel = "Treatment", 
+                       Xlabel="immigration att.", 
+                       main = "gender policies, t3", 
+                       cex.main = .8, 
+                       ncols=2,
+                       cex.axis = 0.8, cex.lab = 0.8)
+
+## -- -- d) raw plots, outcome: gender policies, treatment: t4 (not in Appendix)
+df_minimal <- data.frame(
+  genderpolicies = as.numeric(df$genderpolicies[df$treatment %in% c("control", "t4")]),
+  treatment = as.numeric(ifelse(df$treatment[df$treatment %in% c("control", "t4")] == "control", 0, 1)),
+  immigration = as.numeric(df$immigration[df$treatment %in% c("control", "t4")])
+)
+
+interflex(estimator = "raw",
+                       Y = "genderpolicies", 
+                       D = "treatment", 
+                       X = "immigration", 
+                       data = df_minimal, 
+                       weights = NULL, 
+                       Ylabel = "gender policies", 
+                       Dlabel = "Treatment", 
+                       Xlabel="immigration att.", 
+                       main = "gender policies, t4", 
+                       cex.main = .8,  
+                       ncols=2,
+                       cex.axis = 0.8, cex.lab = 0.8)
+
+## -- -- e) raw plots, outcome: integration policies, treatment: t1 (not in Appendix)
+df_minimal <- data.frame(
+  integration = as.numeric(df$integration[df$treatment %in% c("control", "t1")]),
+  treatment = as.numeric(ifelse(df$treatment[df$treatment %in% c("control", "t1")] == "control", 0, 1)),
+  immigration = as.numeric(df$immigration[df$treatment %in% c("control", "t1")])
+)
+
+interflex(estimator = "raw",
+          Y = "integration", 
+          D = "treatment", 
+          X = "immigration", 
+          data = df_minimal, 
+          weights = NULL, 
+          Ylabel = "integration policies", 
+          Dlabel = "Treatment", 
+          Xlabel="immigration att.", 
+          main = "integration policies, t1", 
+          cex.main = .8,  
+          ncols=2,
+          cex.axis = 0.8, cex.lab = 0.8)
+
+## -- -- f) raw plots, outcome: integration policies, treatment: t2 (not in Appendix)
+df_minimal <- data.frame(
+  integration = as.numeric(df$integration[df$treatment %in% c("control", "t2")]),
+  treatment = as.numeric(ifelse(df$treatment[df$treatment %in% c("control", "t2")] == "control", 0, 1)),
+  immigration = as.numeric(df$immigration[df$treatment %in% c("control", "t2")])
+)
+
+interflex(estimator = "raw",
+                            Y = "integration", 
+                            D = "treatment", 
+                            X = "immigration", 
+                            data = df_minimal, 
+                            weights = NULL, 
+                            Ylabel = "integration policies", 
+                            Dlabel = "Treatment", 
+                            Xlabel="immigration att.", 
+                            main = "integration policies, t2", 
+                            cex.main = .8,  
+                            ncols=2,
+                            cex.axis = 0.8, cex.lab = 0.8)
+
+## -- -- g) raw plots, outcome: integration policies, treatment: t3 (in Appendix)
+df_minimal <- data.frame(
+  integration = as.numeric(df$integration[df$treatment %in% c("control", "t3")]),
+  treatment = as.numeric(ifelse(df$treatment[df$treatment %in% c("control", "t3")] == "control", 0, 1)),
+  immigration = as.numeric(df$immigration[df$treatment %in% c("control", "t3")])
+)
+
+integration_t3 <- interflex(estimator = "raw",
+                            Y = "integration", 
+                            D = "treatment", 
+                            X = "immigration", 
+                            data = df_minimal, 
+                            weights = NULL, 
+                            Ylabel = "integration policies", 
+                            Dlabel = "Treatment", 
+                            Xlabel="immigration att.", 
+                            main = "integration policies, t3", 
+                            cex.main = .8,  
+                            ncols=2,
+                            cex.axis = 0.8, cex.lab = 0.8)
+integration_t3
+
+## -- -- h) raw plots, outcome: integration policies, treatment: t4 (in Appendix) 
+df_minimal <- data.frame(
+  integration = as.numeric(df$integration[df$treatment %in% c("control", "t4")]),
+  treatment = as.numeric(ifelse(df$treatment[df$treatment %in% c("control", "t4")] == "control", 0, 1)),
+  immigration = as.numeric(df$immigration[df$treatment %in% c("control", "t4")])
+)
+
+integration_t4 <- interflex(estimator = "raw",
+                            Y = "integration", 
+                            D = "treatment", 
+                            X = "immigration", 
+                            data = df_minimal, 
+                            weights = NULL, 
+                            Ylabel = "integration policies", 
+                            Dlabel = "Treatment", 
+                            Xlabel="immigration att.", 
+                            main = "integration policies, t4", 
+                            cex.main = .8,  
+                            ncols=2, 
+                            cex.axis = 0.8, cex.lab = 0.8)
+integration_t4
+
+ggarrange(gender_t1, gender_t2, integration_t3, integration_t4, 
+          ncol = 2, nrow = 2)
+
+
+ggsave( "figures/robust1.png", dpi = 1000, width = 7, height = 5)
+
+cat("Producing Figure A3.\n")
+## -- -- i)  Conditional marginal effects from binning estimator, outcome: gender policies, t1 (in Appendix)
+bin = 3
+
+df_minimal <- data.frame(
+  genderpolicies = as.numeric(df$genderpolicies[df$treatment %in% c("control", "t1")]),
+  treatment = as.numeric(ifelse(df$treatment[df$treatment %in% c("control", "t1")] == "control", 0, 1)),
+  immigration = as.numeric(df$immigration[df$treatment %in% c("control", "t1")])
+)
+
+gender_mr_t1 <- interflex(Y = "genderpolicies",
+          D = "treatment", 
+          X = "immigration", 
+          data = df_minimal, 
+          estimator = "binning", 
+          nbins = bin,
+          vcov.type = "robust", 
+          main = " ",
+          Ylabel = "gender policies", 
+          Dlabel = "t1", 
+          Xlabel="immigration attitudes", 
+          cex.main = .8,  
+          cex.axis = 0.5, cex.lab = 0.5)
+gender_mr_t1
+
+## -- -- j)  Conditional marginal effects from binning estimator, outcome: gender policies, t2 (in Appendix)
+df_minimal <- data.frame(
+  genderpolicies = as.numeric(df$genderpolicies[df$treatment %in% c("control", "t2")]),
+  treatment = as.numeric(ifelse(df$treatment[df$treatment %in% c("control", "t2")] == "control", 0, 1)),
+  immigration = as.numeric(df$immigration[df$treatment %in% c("control", "t2")])
+)
+
+gender_mr_t2 <- interflex(Y = "genderpolicies",
+                         D = "treatment", 
+                         X = "immigration", 
+                         data = df_minimal, 
+                         estimator = "binning", 
+                         nbins = bin,
+                         vcov.type = "robust", 
+                         main = " ",
+                         Ylabel = "gender policies", 
+                         Dlabel = "t2", 
+                         Xlabel="immigration attitudes", 
+                         cex.main = .8,  
+                         cex.axis = 0.5, cex.lab = 0.5)
+gender_mr_t2 
+
+## -- -- k)  Conditional marginal effects from binning estimator, outcome: gender policies, t3 (not in Appendix)
+df_minimal <- data.frame(
+  genderpolicies = as.numeric(df$genderpolicies[df$treatment %in% c("control", "t3")]),
+  treatment = as.numeric(ifelse(df$treatment[df$treatment %in% c("control", "t3")] == "control", 0, 1)),
+  immigration = as.numeric(df$immigration[df$treatment %in% c("control", "t3")])
+)
+
+gender_mr_t3 <- interflex(Y = "genderpolicies",
+                          D = "treatment", 
+                          X = "immigration", 
+                          data = df_minimal, 
+                          estimator = "binning", 
+                          nbins = bin,
+                          vcov.type = "robust", 
+                          main = " ",
+                          Ylabel = "gender policies", 
+                          Dlabel = "t3", 
+                          Xlabel="immigration attitudes", 
+                          cex.main = .8,  
+                          cex.axis = 0.5, cex.lab = 0.5)
+gender_mr_t3 
+
+## -- -- l)  Conditional marginal effects from binning estimator, outcome: gender policies, t4 (not in Appendix)
+df_minimal <- data.frame(
+  genderpolicies = as.numeric(df$genderpolicies[df$treatment %in% c("control", "t4")]),
+  treatment = as.numeric(ifelse(df$treatment[df$treatment %in% c("control", "t4")] == "control", 0, 1)),
+  immigration = as.numeric(df$immigration[df$treatment %in% c("control", "t4")])
+)
+
+gender_mr_t4 <- interflex(Y = "genderpolicies",
+                          D = "treatment", 
+                          X = "immigration", 
+                          data = df_minimal, 
+                          estimator = "binning", 
+                          nbins = bin,
+                          vcov.type = "robust", 
+                          main = " ",
+                          Ylabel = "gender policies", 
+                          Dlabel = "t4", 
+                          Xlabel="immigration attitudes", 
+                          cex.main = .8,  
+                          cex.axis = 0.5, cex.lab = 0.5)
+gender_mr_t4
+
+## -- -- m)  Conditional marginal effects from binning estimator, outcome: integration policies, t1 (not in Appendix)
+df_minimal <- data.frame(
+  integration = as.numeric(df$integration[df$treatment %in% c("control", "t1")]),
+  treatment = as.numeric(ifelse(df$treatment[df$treatment %in% c("control", "t1")] == "control", 0, 1)),
+  immigration = as.numeric(df$immigration[df$treatment %in% c("control", "t1")])
+)
+
+integration_mr_t1 <- interflex(Y = "integration",
+                          D = "treatment", 
+                          X = "immigration", 
+                          data = df_minimal, 
+                          estimator = "binning", 
+                          nbins = bin,
+                          vcov.type = "robust", 
+                          main = " ",
+                          Ylabel = "integration policies", 
+                          Dlabel = "t1", 
+                          Xlabel="immigration attitudes", 
+                          cex.main = .8,  
+                          cex.axis = 0.5, cex.lab = 0.5)
+
+integration_mr_t1
+
+## -- -- n)  Conditional marginal effects from binning estimator, outcome: integration policies, t2 (not in Appendix)
+df_minimal <- data.frame(
+  integration = as.numeric(df$integration[df$treatment %in% c("control", "t2")]),
+  treatment = as.numeric(ifelse(df$treatment[df$treatment %in% c("control", "t2")] == "control", 0, 1)),
+  immigration = as.numeric(df$immigration[df$treatment %in% c("control", "t2")])
+)
+
+integration_mr_t2 <- interflex(Y = "integration",
+                               D = "treatment", 
+                               X = "immigration", 
+                               data = df_minimal, 
+                               estimator = "binning", 
+                               nbins = bin,
+                               vcov.type = "robust", 
+                               main = " ",
+                               Ylabel = "integration policies", 
+                               Dlabel = "t2", 
+                               Xlabel="immigration attitudes", 
+                               cex.main = .8,  
+                               cex.axis = 0.5, cex.lab = 0.5)
+
+integration_mr_t2
+
+
+## -- -- o) Conditional marginal effects from binning estimator, outcome: integration policies, t3 (in Appendix)
+df_minimal <- data.frame(
+  integration = as.numeric(df$integration[df$treatment %in% c("control", "t3")]),
+  treatment = as.numeric(ifelse(df$treatment[df$treatment %in% c("control", "t3")] == "control", 0, 1)),
+  immigration = as.numeric(df$immigration[df$treatment %in% c("control", "t3")])
+)
+
+integration_mr_t3 <- interflex(Y = "integration",
+                               D = "treatment", 
+                               X = "immigration", 
+                               data = df_minimal, 
+                               estimator = "binning", 
+                               nbins = bin,
+                               vcov.type = "robust", 
+                               main = " ",
+                               Ylabel = "integration policies", 
+                               Dlabel = "t2", 
+                               Xlabel="immigration attitudes", 
+                               cex.main = .8,  
+                               cex.axis = 0.5, cex.lab = 0.5)
+
+integration_mr_t3
+
+
+## -- -- p) Conditional marginal effects from binning estimator, outcome: integration policies, t4 (in Appendix)
+df_minimal <- data.frame(
+  integration = as.numeric(df$integration[df$treatment %in% c("control", "t4")]),
+  treatment = as.numeric(ifelse(df$treatment[df$treatment %in% c("control", "t4")] == "control", 0, 1)),
+  immigration = as.numeric(df$immigration[df$treatment %in% c("control", "t4")])
+)
+
+integration_mr_t4 <- interflex(Y = "integration",
+                               D = "treatment", 
+                               X = "immigration", 
+                               data = df_minimal, 
+                               estimator = "binning", 
+                               nbins = bin,
+                               vcov.type = "robust", 
+                               main = " ",
+                               Ylabel = "integration policies", 
+                               Dlabel = "t2", 
+                               Xlabel="immigration attitudes", 
+                               cex.main = .8,  
+                               cex.axis = 0.5, cex.lab = 0.5)
+
+integration_mr_t4
+
+ggarrange(gender_mr_t1$figure,
+          gender_mr_t2$figure, 
+          integration_mr_t3$figure,
+          integration_mr_t4$figure,
+          ncol = 2, nrow = 2)
+
+ggsave( "figures/robust2.png", dpi = 1000, width = 7, height = 5)
+
+
+cat("Calculating additional robustness tests: \n")
+cat("Calculating differences between value and safety threats with group association (Muslim - Latino)\n")
+cat("These results are described in the discussion in the text, these tables are not listed in the Appendix.\n")
+
+## -- Robustness test 3 (mentioned in paper) 
+## -- Differences between value and safety threats with group association (Muslim - Latino)
+
+df_treated <- df %>%
+  filter(treatment != "control")
+
+df_treated <- df_treated %>%
+  mutate(threat_type = case_when(
+    treatment %in% c("t1", "t3") ~ "Value-threat",
+    treatment %in% c("t2", "t4") ~ "Safety-threat"
+  ))
+
+threat_sizes <- df_treated %>%
+  count(threat_type) %>%
+  deframe()
+
+print("Sample sizes by threat type:")
+print(threat_sizes)
+
+### -- Muslim test
+muslims_summary <- df_treated %>%
+  group_by(threat_type) %>%
+  summarise(
+    n_total = n(),
+    n_mentioned = sum(mc2_muslims == "Y", na.rm = TRUE),
+    n_not_mentioned = n_total - n_mentioned,
+    prop_mentioned = n_mentioned / n_total
+  ) %>%
+  mutate(group = "Muslims")
+
+print("Muslims by threat type:")
+print(muslims_summary)
+
+# Create contingency table for chi-square
+muslims_table <- muslims_summary %>%
+  select(threat_type, n_mentioned, n_not_mentioned) %>%
+  column_to_rownames("threat_type") %>%
+  as.matrix()
+
+print("Muslims contingency table:")
+print(muslims_table)
+
+muslims_chisq <- chisq.test(muslims_table)
+print("Muslims chi-square test:")
+print(muslims_chisq)
+
+### -- Latinos test
+latinos_summary <- df_treated %>%
+  group_by(threat_type) %>%
+  summarise(
+    n_total = n(),
+    n_mentioned = sum(mc2_latinos == "Y", na.rm = TRUE),
+    n_not_mentioned = n_total - n_mentioned,
+    prop_mentioned = n_mentioned / n_total
+  ) %>%
+  mutate(group = "Latinos")
+
+print("Latinos by threat type:")
+print(latinos_summary)
+
+
+### -- Chi-square tests
+latinos_table <- latinos_summary %>%
+  select(threat_type, n_mentioned, n_not_mentioned) %>%
+  column_to_rownames("threat_type") %>%
+  as.matrix()
+
+print("Latinos contingency table:")
+print(latinos_table)
+
+latinos_chisq <- chisq.test(latinos_table)
+print("Latinos chi-square test:")
+print(latinos_chisq)
+
+### --  Summary table 
+results_long <- bind_rows(
+  muslims_summary %>% 
+    mutate(chi_sq = muslims_chisq$statistic, 
+           p_value = muslims_chisq$p.value),
+  latinos_summary %>% 
+    mutate(chi_sq = latinos_chisq$statistic, 
+           p_value = latinos_chisq$p.value)
+) %>%
+  mutate(
+    significance = case_when(
+      p_value < 0.001 ~ "***",
+      p_value < 0.01 ~ "**",
+      p_value < 0.05 ~ "*",
+      TRUE ~ ""
+    )
+  )
+
+print("Summary Results Table (Long Format):")
+print(results_long)
+
+results_wide <- results_long %>%
+  select(group, threat_type, n_mentioned, n_total, prop_mentioned) %>%
+  pivot_wider(
+    names_from = threat_type,
+    values_from = c(n_mentioned, n_total, prop_mentioned),
+    names_glue = "{threat_type}_{.value}"
+  ) %>%
+  mutate(
+    chi_squared = c(muslims_chisq$statistic, latinos_chisq$statistic),
+    df = 1,
+    p_value = c(muslims_chisq$p.value, latinos_chisq$p.value),
+    sig = c(
+      ifelse(muslims_chisq$p.value < 0.001, "***",
+             ifelse(muslims_chisq$p.value < 0.01, "**",
+                    ifelse(muslims_chisq$p.value < 0.05, "*", ""))),
+      ifelse(latinos_chisq$p.value < 0.001, "***",
+             ifelse(latinos_chisq$p.value < 0.01, "**",
+                    ifelse(latinos_chisq$p.value < 0.05, "*", "")))
+    )
+  ) %>%
+  rename(
+    Group = group,
+    `Safety N` = `Safety-threat_n_mentioned`,
+    `Safety Total` = `Safety-threat_n_total`, 
+    `Safety %` = `Safety-threat_prop_mentioned`,
+    `Value N` = `Value-threat_n_mentioned`,
+    `Value Total` = `Value-threat_n_total`,
+    `Value %` = `Value-threat_prop_mentioned`,
+    `χ²` = chi_squared,
+    `p` = p_value
+  )
+
+print("Summary Results Table (Wide Format):")
+print(results_wide)
+
+# End log
+cat("\n========================================\n")
+cat("Appendix completed\n")
+cat("Ended:", as.character(Sys.time()), "\n")
+cat("========================================\n")
+sink() 
+
+
