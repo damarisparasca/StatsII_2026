@@ -1,0 +1,166 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{graphicx,textcomp}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage[reqno]{amsmath}
+\usepackage{amsthm}
+\usepackage{fancyvrb}
+\usepackage{amssymb,enumerate}
+\usepackage[all]{xy}
+\usepackage{endnotes}
+\usepackage{lscape}
+\newtheorem{com}{Comment}
+\usepackage{float}
+\usepackage{hyperref}
+\newtheorem{lem} {Lemma}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{cor}{Corollary}
+\newtheorem{obs}{Observation}
+\usepackage[compact]{titlesec}
+\usepackage{dcolumn}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{multirow}
+\usepackage{xcolor}
+\newcolumntype{.}{D{.}{.}{-1}}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+\definecolor{light-gray}{gray}{0.65}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+\lstset{style=mystyle}
+\newcommand{\Sref}[1]{Section~\ref{#1}}
+\newtheorem{hyp}{Hypothesis}
+
+\title{Problem Set 4}
+\date{Due: April 10, 2026}
+\author{Applied Stats II}
+
+
+\begin{document}
+	\maketitle
+	\section*{Instructions}
+	\begin{itemize}
+	\item Please show your work! You may lose points by simply writing in the answer. If the problem requires you to execute commands in \texttt{R}, please include the code you used to get your answers. Please also include the \texttt{.R} file that contains your code. If you are not sure if work needs to be shown for a particular problem, please ask.
+	\item Your homework should be submitted electronically on GitHub in \texttt{.pdf} form.
+	\item This problem set is due before 23:59 on Friday April 10, 2026. No late assignments will be accepted.
+
+	\end{itemize}
+
+	\vspace{.25cm}
+\section*{Question 1}
+\vspace{.25cm}
+\noindent We're interested in modeling the historical causes of child mortality. We have data from 26855 children born in Skellefteå, Sweden from 1850 to 1884. Using the "child" dataset in the \texttt{eha} library, fit a Cox Proportional Hazard model using mother's age and infant's gender as covariates. Present and interpret the output.
+
+\section*{Question 2}
+\vspace{.25cm}
+\noindent We want to estimate how the amount of damage caused by a disaster relates to (1) whether disaster relief is provided and (2) the amount of relief that is provided  conditional on a donation occurring when a disaster hits a given country. Estimate a Heckman selection model using the \texttt{disasters\_response} data on \href{https://raw.githubusercontent.com/ASDS-TCD/StatsII_2026/refs/heads/main/datasets/disaster_response.csv}{GitHub} in which \texttt{binContribution} is the outcome for the selection equation, and \texttt{originalContributionMillionUSDLogged} is the outcome for the second equation. Use \texttt{occurrences  + deathsEM + normalizedDamageEMLogged} as your input variables for both equations. Present and interpret the output.
+\newpage
+\section*{Solution - Question 1}
+	\lstinputlisting[language=R, firstline=43,lastline=50]{PS04_DP.R}
+	\begin{table}[!htbp] \centering 
+		\caption{Model Summary} 
+		\label{} 
+		\begin{tabular}{@{\extracolsep{5pt}}lc} 
+			\\[-1.8ex]\hline 
+			\hline \\[-1.8ex] 
+			& \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+			\cline{2-2} 
+			\\[-1.8ex] & risk of child mortality \\ 
+			\hline \\[-1.8ex] 
+			sex\_female & $-$0.082$^{***}$ \\ 
+			& (0.027) \\ 
+			& \\ 
+			mother age & 0.008$^{***}$ \\ 
+			& (0.002) \\ 
+			& \\ 
+			\hline \\[-1.8ex] 
+			Observations & 26,574 \\ 
+			R$^{2}$ & 0.001 \\ 
+			Max. Possible R$^{2}$ & 0.986 \\ 
+			Log Likelihood & $-$56,503.480 \\ 
+			Wald Test & 22.520$^{***}$ (df = 2) \\ 
+			LR Test & 22.518$^{***}$ (df = 2) \\ 
+			Score (Logrank) Test & 22.530$^{***}$ (df = 2) \\ 
+			\hline 
+			\hline \\[-1.8ex] 
+			\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+		\end{tabular} 
+	\end{table} 
+	\begin{table}[!htbp] \centering 
+		\caption{Hazard Ratios} 
+		\label{} 
+		\begin{tabular}{@{\extracolsep{5pt}} cc} 
+			\\[-1.8ex]\hline 
+			\hline \\[-1.8ex] 
+			sex\_female & mother age \\ 
+			\hline \\[-1.8ex] 
+			$0.921$ & $1.008$ \\ 
+			\hline \\[-1.8ex] 
+		\end{tabular} 
+	\end{table} 
+ \underline{\textbf{Interpretation}}
+ \begin{itemize}
+ 	\item \texttt{sex\_female:} Holding the mother’s age constant, being female is associated with a lower risk of child mortality than being male. In terms of hazard ratios, female children have about a 8\% (1 - 0.92 = 0.08 or 8\%) lower mortality risk compared to males. The variable is statistically significant. 
+ 	\newpage
+ 	\item  \texttt{mother age:} Holding sex constant, an increase in the mother’s age is associated with a slight increase in the risk of child mortality. In terms of hazard ratios, a one-year increase in the mother’s age is associated with a 0.8\% (1.008 - 1 = 0.008 or  0.8\%) increase in child mortality. This variable is also statistically significant.
+ 	\item remaining output: The remaining output of the model summary indicates that we have a large sample and shows how the model performs in some statistical tests. Firstly, the R-squared value is very low, suggesting that the model explains very little variation in child mortality. This does not seem particularly surprising, given that a lot of variables that are not included in the model could help explain the outcome. Finally, we can see that the value of the  likelihood ratio (LR) test statistic is highly significant, suggesting the the model provides a better fit than a model with no predictors, or a null model. At least one covariate in the model helps explain the variation in child mortality risk. 
+ \end{itemize}
+\newpage
+\section*{Solution - Question 2}
+	\lstinputlisting[language=R, firstline=69,lastline=73]{PS04_DP.R}
+	\vspace{.5cm}
+	\begin{verbatim}
+		Tobit 2 model (sample selection model)
+		2-step Heckman / heckit estimation
+		49096 observations (45848 censored and 3248 observed)
+		11 free parameters (df = 49086)
+		
+		Probit selection equation:
+																											Estimate 		Std. Error 	t value	 Pr(>|t|)   
+		(Intercept)              -1.3019633  0.0180138  -72.28  <2e-16 ***
+		occurrences               0.0191534  0.0016550   11.57  <2e-16 ***
+		deathsEM                  0.0114710  0.0007178   15.98  <2e-16 ***
+		normalizedDamageEMLogged  0.0211062  0.0009035   23.36  <2e-16 ***
+		
+		Outcome equation:
+																										Estimate 		Std. Error 	t value	 Pr(>|t|)  
+		(Intercept)               9.76625    6.04404   1.616  0.1061
+		occurrences              -0.08634    0.05492  -1.572  0.1159
+		deathsEM                 -0.03298    0.02569  -1.284  0.1993
+		normalizedDamageEMLogged -0.11420    0.06231  -1.833  0.0668
+		---
+		Signif. codes:  
+		0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+	\end{verbatim}
+	\underline{\textbf{Interpretation}} \\[.2cm]
+	Looking at the selection equation, we can see that the number of disaster occurrences, the number of deaths and the level of damage are all positively associated with the likelihood of receiving disaster relief. Additionally, all of these show a statistically significant effect. Looking at the outcome equation, we can see that disaster severity does not have a strong or consistent effect on the amount of aid provided. None of the previously stated covariates remains statistically significant at the 5\% level. Thus, the Heckman selection model shows that disaster severity (operationalised as occurrences, deaths, and damage) is positively associated with the likelihood of receiving disaster relief. Nevertheless, conditional on receiving aid, disaster severity does not significantly impact the amount of relief provided. While aid is provided based on necessity, the exact amount of aid is not influenced by the severity factors included in this model. 
+\end{document}
